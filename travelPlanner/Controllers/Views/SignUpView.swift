@@ -126,8 +126,8 @@ class SignUpView: UIView {
             make.leading.trailing.equalToSuperview().inset(11)
             make.height.equalTo(48)
         }
-        pswField.textContentType = .oneTimeCode
-        pswField.isSecureTextEntry = true
+        confPswField.textContentType = .oneTimeCode
+        confPswField.isSecureTextEntry = true
         
         signUpBtn.snp.makeConstraints { make in
             make.top.equalTo(confPswField.snp.bottom).offset(18)
@@ -160,6 +160,26 @@ class SignUpView: UIView {
     @objc private func didTapSignIn() {
         onSignInTapped?()
     }
+    
+    func getName() -> String? {
+        return nameField.text
+    }
+    
+    func getSurname() -> String? {
+        return surnameField.text
+    }
+    
+    func getEmail() -> String? {
+        return emailField.text
+    }
+    
+    func getPassword() -> String? {
+        return pswField.text
+    }
+    
+    func getConfirmPassword() -> String? {
+        return confPswField.text
+    }
 }
 
 extension SignUpView: UITextViewDelegate {
@@ -172,5 +192,3 @@ extension SignUpView: UITextViewDelegate {
         return false
     }
 }
-
-

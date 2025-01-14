@@ -16,7 +16,6 @@ class LogInController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.init(hex: "#362E83")
         
-        // Подписываемся на действие кнопки
         signInView.onForgotPswTapped = { [weak self] in
             self?.handleForgotPsw()
         }
@@ -32,6 +31,11 @@ class LogInController: UIViewController {
         setupUI()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
+    }
+    
     private func setupUI() {
         view.addSubview(signInView)
         signInView.snp.makeConstraints { make in
@@ -43,11 +47,35 @@ class LogInController: UIViewController {
     }
     
     private func handleSignIn() {
-        print("Sign In button tapped")
-        let vc = HomeController()
-        let nav = UINavigationController(rootViewController: vc)
-        nav.modalPresentationStyle = .fullScreen
-        self.present(nav, animated: false, completion: nil)
+        let loginUserRequest = LogInUserRequest(
+            email: signInView.getRegisteredEmail() ?? "",
+            password: signInView.getRegisteredPassword() ?? ""
+        )
+        
+        // Validate email
+        if !Validator.isValidEmail(for: loginUserRequest.email) {
+            AlertManager.showInvalidEmailAlert(on: self)
+            return
+        }
+        
+        // Validate password
+        if !Validator.isPasswordValid(for: loginUserRequest.password) {
+            AlertManager.showInvalidPswAlert(on: self)
+            return
+        }
+        
+        AuthService.shared.signIn(with: loginUserRequest) { [weak self] errorMessage in
+            guard let self = self else { return }
+            
+            if let errorMessage {
+                AlertManager.showBasicAlert(on: self, with: "Sign-In Error", message: errorMessage)
+                return
+            }
+            
+            if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+                sceneDelegate.checkAuthentication()
+            }
+        }
     }
     
     private func handleForgotPsw() {

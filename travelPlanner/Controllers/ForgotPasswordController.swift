@@ -15,11 +15,16 @@ class ForgotPasswordController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.init(hex: "#362E83")
         
-        // Подписываемся на действие кнопки
         forgotPswView.onNextTapped = { [weak self] in
             self?.handleNext()
         }
         setupUI()
+        setupBackButton()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = false
     }
     
     private func setupUI() {
@@ -32,13 +37,32 @@ class ForgotPasswordController: UIViewController {
         }
     }
     
+    private func setupBackButton() {
+        let backButton = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(didTapBack))
+        backButton.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .normal)
+        navigationItem.leftBarButtonItem = backButton
+    }
+    
     private func handleNext() {
-        print("Next button tapped")
-        //        let vc = ForgotPasswordController()
-        //        navigationController?.pushViewController(vc, animated: true)
-        guard let email = forgotPswView.getEmailText(), !email.isEmpty else {
-            print("Email field is empty")
+        let email = forgotPswView.getEmailText() ?? ""
+        
+        if !Validator.isValidEmail(for: email) {
+            AlertManager.showInvalidEmailAlert(on: self)
             return
         }
+        
+        AuthService.shared.forgotPassword(with: email) { [weak self] error in
+            guard let self = self else { return }
+            if let error = error {
+                AlertManager.showErrorSendingPasswordReset(on: self, with: error)
+                return
+            }
+            
+            AlertManager.showPasswordResetSend(on: self)
+        }
+    }
+    
+    @objc private func didTapBack() {
+        navigationController?.popViewController(animated: true)
     }
 }

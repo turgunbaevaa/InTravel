@@ -10,6 +10,17 @@
 		0A818D762D2610400024ACD9 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818D752D2610400024ACD9 /* SignUpView.swift */; };
 		0A818D782D2619670024ACD9 /* WebViewerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818D772D2619670024ACD9 /* WebViewerController.swift */; };
 		0A818D7A2D263BDA0024ACD9 /* ForgotPswView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818D792D263BDA0024ACD9 /* ForgotPswView.swift */; };
+		0A818D7C2D27595D0024ACD9 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818D7B2D27595D0024ACD9 /* AlertManager.swift */; };
+		0A818D7E2D27F29A0024ACD9 /* LogInUserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818D7D2D27F29A0024ACD9 /* LogInUserRequest.swift */; };
+		0A818D802D29800D0024ACD9 /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818D7F2D29800D0024ACD9 /* Validator.swift */; };
+		0A818D822D2EE8950024ACD9 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818D812D2EE8950024ACD9 /* User.swift */; };
+		0A818D842D3439850024ACD9 /* MyTripsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818D832D3439840024ACD9 /* MyTripsController.swift */; };
+		0A818D862D3439A30024ACD9 /* BudgetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818D852D3439A30024ACD9 /* BudgetController.swift */; };
+		0A818D882D3439BD0024ACD9 /* AccountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818D872D3439BD0024ACD9 /* AccountController.swift */; };
+		0A818D8A2D3439F50024ACD9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818D892D3439F50024ACD9 /* TabBarController.swift */; };
+		0A818D8C2D36611A0024ACD9 /* Destination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818D8B2D36611A0024ACD9 /* Destination.swift */; };
+		0A818D8E2D3662800024ACD9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818D8D2D3662800024ACD9 /* HomeView.swift */; };
+		0A818D912D3665E90024ACD9 /* DestinationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818D902D3665E90024ACD9 /* DestinationCell.swift */; };
 		0AF05A7C2D25AECA001CE2B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF05A7B2D25AECA001CE2B7 /* AppDelegate.swift */; };
 		0AF05A7E2D25AECA001CE2B7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF05A7D2D25AECA001CE2B7 /* SceneDelegate.swift */; };
 		0AF05A852D25AECC001CE2B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AF05A842D25AECC001CE2B7 /* Assets.xcassets */; };
@@ -35,6 +46,17 @@
 		0A818D752D2610400024ACD9 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		0A818D772D2619670024ACD9 /* WebViewerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewerController.swift; sourceTree = "<group>"; };
 		0A818D792D263BDA0024ACD9 /* ForgotPswView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPswView.swift; sourceTree = "<group>"; };
+		0A818D7B2D27595D0024ACD9 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
+		0A818D7D2D27F29A0024ACD9 /* LogInUserRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInUserRequest.swift; sourceTree = "<group>"; };
+		0A818D7F2D29800D0024ACD9 /* Validator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
+		0A818D812D2EE8950024ACD9 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		0A818D832D3439840024ACD9 /* MyTripsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTripsController.swift; sourceTree = "<group>"; };
+		0A818D852D3439A30024ACD9 /* BudgetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetController.swift; sourceTree = "<group>"; };
+		0A818D872D3439BD0024ACD9 /* AccountController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountController.swift; sourceTree = "<group>"; };
+		0A818D892D3439F50024ACD9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		0A818D8B2D36611A0024ACD9 /* Destination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Destination.swift; sourceTree = "<group>"; };
+		0A818D8D2D3662800024ACD9 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		0A818D902D3665E90024ACD9 /* DestinationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationCell.swift; sourceTree = "<group>"; };
 		0AF05A782D25AECA001CE2B7 /* travelPlanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = travelPlanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AF05A7B2D25AECA001CE2B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0AF05A7D2D25AECA001CE2B7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -72,6 +94,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A818D8F2D3665C40024ACD9 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				0A818D902D3665E90024ACD9 /* DestinationCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		0AF05A6F2D25AECA001CE2B7 = {
 			isa = PBXGroup;
 			children = (
@@ -93,10 +123,13 @@
 		0AF05A7A2D25AECA001CE2B7 /* travelPlanner */ = {
 			isa = PBXGroup;
 			children = (
+				0A818D8F2D3665C40024ACD9 /* Cells */,
+				0A818D7B2D27595D0024ACD9 /* AlertManager.swift */,
 				0AF05AB12D25EF0C001CE2B7 /* AuthService.swift */,
+				0A818D7F2D29800D0024ACD9 /* Validator.swift */,
 				0AF05AA12D25DFC0001CE2B7 /* Extensions */,
 				0AF05AB32D25EFAB001CE2B7 /* Models */,
-				0AF05A9D2D25DF0F001CE2B7 /* Modules */,
+				0AF05A9D2D25DF0F001CE2B7 /* Controllers */,
 				0AF05A8F2D25AFB8001CE2B7 /* Supporting */,
 				0AF05A892D25AECC001CE2B7 /* Info.plist */,
 			);
@@ -121,11 +154,12 @@
 				0AF05A9B2D25DC64001CE2B7 /* AuthHeaderView.swift */,
 				0A818D752D2610400024ACD9 /* SignUpView.swift */,
 				0A818D792D263BDA0024ACD9 /* ForgotPswView.swift */,
+				0A818D8D2D3662800024ACD9 /* HomeView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
 		};
-		0AF05A9D2D25DF0F001CE2B7 /* Modules */ = {
+		0AF05A9D2D25DF0F001CE2B7 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				0AF05A922D25DAF9001CE2B7 /* ForgotPasswordController.swift */,
@@ -133,10 +167,14 @@
 				0AF05A962D25DB21001CE2B7 /* RegisterController.swift */,
 				0AF05A982D25DB3F001CE2B7 /* HomeController.swift */,
 				0A818D772D2619670024ACD9 /* WebViewerController.swift */,
+				0A818D892D3439F50024ACD9 /* TabBarController.swift */,
+				0A818D832D3439840024ACD9 /* MyTripsController.swift */,
+				0A818D852D3439A30024ACD9 /* BudgetController.swift */,
+				0A818D872D3439BD0024ACD9 /* AccountController.swift */,
 				0AF05A9A2D25DB7F001CE2B7 /* Views */,
 				0AF05A9E2D25DF2D001CE2B7 /* CustomViews */,
 			);
-			path = Modules;
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		0AF05A9E2D25DF2D001CE2B7 /* CustomViews */ = {
@@ -187,6 +225,9 @@
 			isa = PBXGroup;
 			children = (
 				0AF05AB42D25EFD3001CE2B7 /* RegisterUserRequest.swift */,
+				0A818D7D2D27F29A0024ACD9 /* LogInUserRequest.swift */,
+				0A818D812D2EE8950024ACD9 /* User.swift */,
+				0A818D8B2D36611A0024ACD9 /* Destination.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -324,16 +365,27 @@
 			buildActionMask = 2147483647;
 			files = (
 				0AF05AA02D25DF75001CE2B7 /* TravelPlannerTitleLabel.swift in Sources */,
+				0A818D8E2D3662800024ACD9 /* HomeView.swift in Sources */,
+				0A818D8A2D3439F50024ACD9 /* TabBarController.swift in Sources */,
+				0A818D842D3439850024ACD9 /* MyTripsController.swift in Sources */,
 				0AF05AA72D25E029001CE2B7 /* Extension+UIColor.swift in Sources */,
+				0A818D7E2D27F29A0024ACD9 /* LogInUserRequest.swift in Sources */,
 				0A818D7A2D263BDA0024ACD9 /* ForgotPswView.swift in Sources */,
+				0A818D802D29800D0024ACD9 /* Validator.swift in Sources */,
+				0A818D882D3439BD0024ACD9 /* AccountController.swift in Sources */,
 				0AF05A932D25DAF9001CE2B7 /* ForgotPasswordController.swift in Sources */,
+				0A818D912D3665E90024ACD9 /* DestinationCell.swift in Sources */,
 				0AF05AB52D25EFD3001CE2B7 /* RegisterUserRequest.swift in Sources */,
+				0A818D862D3439A30024ACD9 /* BudgetController.swift in Sources */,
 				0AF05A992D25DB3F001CE2B7 /* HomeController.swift in Sources */,
 				0AF05A972D25DB21001CE2B7 /* RegisterController.swift in Sources */,
 				0AF05A952D25DB13001CE2B7 /* LogInController.swift in Sources */,
+				0A818D822D2EE8950024ACD9 /* User.swift in Sources */,
 				0AF05AA52D25DFF3001CE2B7 /* UIView+Ext.swift in Sources */,
+				0A818D7C2D27595D0024ACD9 /* AlertManager.swift in Sources */,
 				0AF05AAA2D25E1A5001CE2B7 /* TravelPlannerSubTitleLabel.swift in Sources */,
 				0AF05AB02D25E806001CE2B7 /* TravelPlannerButton.swift in Sources */,
+				0A818D8C2D36611A0024ACD9 /* Destination.swift in Sources */,
 				0AF05A7C2D25AECA001CE2B7 /* AppDelegate.swift in Sources */,
 				0AF05A7E2D25AECA001CE2B7 /* SceneDelegate.swift in Sources */,
 				0A818D782D2619670024ACD9 /* WebViewerController.swift in Sources */,

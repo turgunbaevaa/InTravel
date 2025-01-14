@@ -49,8 +49,6 @@ class AuthHeaderView: UIView {
         return button
     }()
     
-    
-    
     // MARK: - LifeCycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -131,4 +129,11 @@ class AuthHeaderView: UIView {
         onSignUpTapped?()
     }
 
+    func getRegisteredEmail() -> String? {
+        return emailField.text
+    }
+    
+    func getRegisteredPassword() -> String? {
+        return pswField.text
+    }
 }

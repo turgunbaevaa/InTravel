@@ -12,4 +12,5 @@ struct RegisterUserRequest {
     let surname: String
     let email: String
     let password: String
+    let confPassword: String
 }

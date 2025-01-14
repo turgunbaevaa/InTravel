@@ -8,5 +8,6 @@
 import Foundation
 
 struct LogInUserRequest {
-    
+    let email: String
+    let password: String
 }
