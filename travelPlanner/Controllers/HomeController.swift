@@ -7,29 +7,63 @@
 
 import UIKit
 import SnapKit
+import SDWebImage
 
 class HomeController: UIViewController {
     
     //MARK: - UI Components
     
     private let homeView = HomeView()
+    private var collectionView: UICollectionView!
+    private var destinations: [Destination] = []
+    private var sections: [Section] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        setupHomeView()
+        setupCollectionView()
+        fetchDestinations() // Fetch data when view loads
         
         AuthService.shared.fetchUser { [weak self] user, error in
             guard let self = self else { return }
-            
             if let error = error {
+                print("Error fetching user: \(error.localizedDescription)")
                 AlertManager.showFetchinUserError(on: self, with: error)
                 return
             }
-            
             if let user = user {
                 DispatchQueue.main.async {
                     self.homeView.updateGreeting(with: user.name)
+                }
+            }
+        }
+        
+        homeView.searchTextField.delegate = self
+    }
+    
+    // Fetch data from NetworkManager
+    private func fetchDestinations() {
+        NetworkManager.shared.fetchDestinations { [weak self] destinations, error in
+            guard let self = self else { return }
+
+            if let error = error {
+                print("Error fetching destinations:", error.localizedDescription)
+                return
+            }
+
+            if let destinations = destinations {
+                // Filter destinations by type
+                let places = destinations.filter { $0.type == "Place" }
+                let hotels = destinations.filter { $0.type == "Hotel" }
+                
+                // Create sections
+                self.sections = [
+                    Section(title: "Places", destinations: places),
+                    Section(title: "Hotels", destinations: hotels)
+                ]
+
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
                 }
             }
         }
@@ -46,20 +80,12 @@ class HomeController: UIViewController {
             action: #selector(didTapLogout)
         )
 
-        // Set the tintColor to white for the bar button item
         navigationItem.rightBarButtonItem?.tintColor = .white
-    }
-    
-    private func setupHomeView() {
         
         view.addSubview(homeView)
-        
         homeView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(16) // Corrected this line
-            make.leading.trailing.equalToSuperview()
+            make.edges.equalTo(view.safeAreaLayoutGuide)
         }
-        
-        homeView.searchTextField.delegate = self
     }
     
     @objc private func didTapLogout() {
@@ -76,6 +102,26 @@ class HomeController: UIViewController {
             }
         }
     }
+    
+    private func setupCollectionView() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 16
+        layout.headerReferenceSize = CGSize(width: view.frame.width, height: 50)
+        
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(HorizontalSectionCell.self, forCellWithReuseIdentifier: HorizontalSectionCell.reuseId)
+        collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderView.reuseId)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.backgroundColor = .clear
+        
+        view.addSubview(collectionView)
+        collectionView.snp.makeConstraints { make in
+            make.top.equalTo(homeView.searchTextField.snp.bottom).offset(16)
+            make.leading.trailing.bottom.equalToSuperview().inset(16)
+        }
+    }
 }
 
 extension HomeController: UITextFieldDelegate {
@@ -83,14 +129,48 @@ extension HomeController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? ""
         let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
-        print("Search query: \(updatedText)")
         // Here, you can filter your data or update the UI
         return true
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
         print("Search submitted: \(textField.text ?? "")")
+        textField.resignFirstResponder()
         return true
+    }
+}
+
+// UICollectionView DataSource & Delegate
+extension HomeController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return sections.count // One section for Places, one for Hotels
+    }
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 1 // Each section has only one horizontal collection view
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HorizontalSectionCell.reuseId, for: indexPath) as! HorizontalSectionCell
+        cell.destinations = sections[indexPath.section].destinations
+        return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard kind == UICollectionView.elementKindSectionHeader else {
+            return UICollectionReusableView()
+        }
+
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderView.reuseId, for: indexPath) as! HeaderView
+        header.titleLabel.text = sections[indexPath.section].title // e.g., "Places" or "Hotels"
+        return header
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 280)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 50) // Header size
     }
 }

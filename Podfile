@@ -9,6 +9,6 @@ target 'travelPlanner' do
    pod 'FirebaseStorage'
    pod 'SnapKit', '~> 5.7.0'
    pod 'OpenSSL-Universal'
-  
+   pod 'SDWebImage'
    
 end

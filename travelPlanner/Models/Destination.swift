@@ -14,6 +14,7 @@ struct Destination: Codable {
     let description: String
     let locationIcon: String
     let locationName: String
+    let type: String
 
     // Custom keys to map Firestore fields to struct properties
     enum CodingKeys: String, CodingKey {
@@ -23,5 +24,6 @@ struct Destination: Codable {
         case description
         case locationIcon = "location_icon"
         case locationName = "location_name"
+        case type
     }
 }
