@@ -17,6 +17,8 @@ class HomeController: UIViewController {
     private var collectionView: UICollectionView!
     private var destinations: [Destination] = []
     private var sections: [Section] = []
+    private var filteredSections: [Section] = [] // Filtered sections based on the search
+    private var isSearching = false // Flag to track if search is active
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -129,12 +131,27 @@ extension HomeController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? ""
         let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
-        // Here, you can filter your data or update the UI
+        
+        if updatedText.isEmpty {
+            isSearching = false
+            filteredSections = sections // Reset to original sections
+        } else {
+            isSearching = true
+            filteredSections = sections.map { section in
+                let filteredDestinations = section.destinations.filter { destination in
+                    destination.name.lowercased().contains(updatedText.lowercased()) ||
+                    destination.description.lowercased().contains(updatedText.lowercased()) ||
+                    destination.locationName.lowercased().contains(updatedText.lowercased())
+                }
+                return Section(title: section.title, destinations: filteredDestinations)
+            }.filter { !$0.destinations.isEmpty } // Remove empty sections
+        }
+        
+        collectionView.reloadData() // Refresh the collection view
         return true
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        print("Search submitted: \(textField.text ?? "")")
         textField.resignFirstResponder()
         return true
     }
@@ -143,16 +160,18 @@ extension HomeController: UITextFieldDelegate {
 // UICollectionView DataSource & Delegate
 extension HomeController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return sections.count // One section for Places, one for Hotels
+        return isSearching ? filteredSections.count : sections.count
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1 // Each section has only one horizontal collection view
+        let dataSource = isSearching ? filteredSections : sections
+        return dataSource[section].destinations.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let dataSource = isSearching ? filteredSections : sections
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HorizontalSectionCell.reuseId, for: indexPath) as! HorizontalSectionCell
-        cell.destinations = sections[indexPath.section].destinations
+        cell.destinations = dataSource[indexPath.section].destinations
         return cell
     }
 
