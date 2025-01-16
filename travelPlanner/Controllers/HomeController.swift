@@ -47,23 +47,30 @@ class HomeController: UIViewController {
     private func fetchDestinations() {
         NetworkManager.shared.fetchDestinations { [weak self] destinations, error in
             guard let self = self else { return }
-
+            
             if let error = error {
                 print("Error fetching destinations:", error.localizedDescription)
                 return
             }
-
+            
             if let destinations = destinations {
                 // Filter destinations by type
                 let places = destinations.filter { $0.type == "Place" }
                 let hotels = destinations.filter { $0.type == "Hotel" }
+                
+                // Debugging: Check the counts of filtered results
+                print("Fetched Places Count:", places.count)
+                print("Fetched Hotels Count:", hotels.count)
                 
                 // Create sections
                 self.sections = [
                     Section(title: "Places", destinations: places),
                     Section(title: "Hotels", destinations: hotels)
                 ]
-
+                
+                // Debugging: Check section data
+                print("Sections Created: \(self.sections.map { $0.title })")
+                
                 DispatchQueue.main.async {
                     self.collectionView.reloadData()
                 }
@@ -81,7 +88,7 @@ class HomeController: UIViewController {
             target: self,
             action: #selector(didTapLogout)
         )
-
+        
         navigationItem.rightBarButtonItem?.tintColor = .white
         
         view.addSubview(homeView)
@@ -131,11 +138,13 @@ extension HomeController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? ""
         let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
-        
+
         if updatedText.isEmpty {
+            // No search term: reset to original sections
             isSearching = false
-            filteredSections = sections // Reset to original sections
+            filteredSections = sections
         } else {
+            // Filter sections based on search term
             isSearching = true
             filteredSections = sections.map { section in
                 let filteredDestinations = section.destinations.filter { destination in
@@ -144,10 +153,17 @@ extension HomeController: UITextFieldDelegate {
                     destination.locationName.lowercased().contains(updatedText.lowercased())
                 }
                 return Section(title: section.title, destinations: filteredDestinations)
-            }.filter { !$0.destinations.isEmpty } // Remove empty sections
+            }.filter { !$0.destinations.isEmpty } // Remove sections with no destinations
         }
-        
-        collectionView.reloadData() // Refresh the collection view
+
+        // Debugging: Check the filtered data
+        print("Search Text: \(updatedText)")
+        print("Filtered Sections Count: \(filteredSections.count)")
+        filteredSections.forEach { section in
+            print("Section: \(section.title), Destinations: \(section.destinations.map { $0.name })")
+        }
+
+        collectionView.reloadData()
         return true
     }
     
@@ -160,14 +176,21 @@ extension HomeController: UITextFieldDelegate {
 // UICollectionView DataSource & Delegate
 extension HomeController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return isSearching ? filteredSections.count : sections.count
+        let count = isSearching ? filteredSections.count : sections.count
+        print("Number of Sections:", count)
+        return count
     }
-
+    
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        let dataSource = isSearching ? filteredSections : sections
+//        let count = dataSource[section].destinations.count
+//        print("Number of Items in Section \(section):", count)
+//        return count
+//    }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let dataSource = isSearching ? filteredSections : sections
-        return dataSource[section].destinations.count
+        return 1 // Only one cell per section, which contains the horizontal collection view
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let dataSource = isSearching ? filteredSections : sections
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HorizontalSectionCell.reuseId, for: indexPath) as! HorizontalSectionCell
@@ -180,8 +203,9 @@ extension HomeController: UICollectionViewDataSource, UICollectionViewDelegateFl
             return UICollectionReusableView()
         }
 
+        let dataSource = isSearching ? filteredSections : sections
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderView.reuseId, for: indexPath) as! HeaderView
-        header.titleLabel.text = sections[indexPath.section].title // e.g., "Places" or "Hotels"
+        header.titleLabel.text = dataSource[indexPath.section].title // Correct title based on current data source
         return header
     }
 
