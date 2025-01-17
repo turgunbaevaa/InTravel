@@ -1151,6 +1151,7 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.36):
     - BoringSSL-GRPC/Interface (= 0.0.36)
   - BoringSSL-GRPC/Interface (0.0.36)
+  - CalendarKit (1.1.11)
   - FirebaseAppCheckInterop (11.7.0)
   - FirebaseAuth (11.7.0):
     - FirebaseAppCheckInterop (~> 11.0)
@@ -1324,6 +1325,7 @@ PODS:
   - SnapKit (5.7.1)
 
 DEPENDENCIES:
+  - CalendarKit
   - FirebaseAuth
   - FirebaseCore
   - FirebaseFirestore
@@ -1336,6 +1338,7 @@ SPEC REPOS:
   trunk:
     - abseil
     - BoringSSL-GRPC
+    - CalendarKit
     - FirebaseAppCheckInterop
     - FirebaseAuth
     - FirebaseAuthInterop
@@ -1360,6 +1363,7 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   abseil: d121da9ef7e2ff4cab7666e76c5a3e0915ae08c3
   BoringSSL-GRPC: ca6a8e5d04812fce8ffd6437810c2d46f925eaeb
+  CalendarKit: 58acabf0a81e010bacfee6eee0d3459d1df0e819
   FirebaseAppCheckInterop: 2376d3ec5cb4267facad4fe754ab4f301a5a519b
   FirebaseAuth: 77e25aa24f3e1c626c5babd3338551fc1669ee0e
   FirebaseAuthInterop: a6973d72aa242ea88ffb6be9c9b06c65455071da
@@ -1381,6 +1385,6 @@ SPEC CHECKSUMS:
   SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
 
-PODFILE CHECKSUM: daf23c643e7da7e89822250cae71ab1f47de6685
+PODFILE CHECKSUM: 283e430f8895c6888b6e4ac5bbc44dc1c9d03bf1
 
 COCOAPODS: 1.16.2

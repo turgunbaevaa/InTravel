@@ -10,5 +10,6 @@ target 'travelPlanner' do
    pod 'SnapKit', '~> 5.7.0'
    pod 'OpenSSL-Universal'
    pod 'SDWebImage'
+   pod 'CalendarKit'
    
 end
