@@ -9,7 +9,7 @@ import FirebaseFirestore
 
 class NetworkManager {
     
-    static let shared = NetworkManager() // Singleton instance
+    static let shared = NetworkManager() 
     
     private init() {}
     
@@ -27,26 +27,22 @@ class NetworkManager {
             
             if let documents = snapshot?.documents {
                 let places = documents.compactMap { try? $0.data(as: Destination.self) }
-                print("Fetched Places:", places) // Debug fetched places
                 allDestinations.append(contentsOf: places)
             }
             
             // Fetch "Hotels"
             db.collection("hotels").getDocuments { snapshot, error in
                 if let error = error {
-                    print("Error fetching hotels:", error.localizedDescription)
                     completion(nil, error) // Return error
                     return
                 }
                 
                 if let documents = snapshot?.documents {
                     let hotels = documents.compactMap { try? $0.data(as: Destination.self) }
-                    print("Fetched Hotels:", hotels) // Debug fetched hotels
                     allDestinations.append(contentsOf: hotels)
                 }
                 
                 // Return combined data via completion handler
-                print("Combined Destinations:", allDestinations)
                 completion(allDestinations, nil)
             }
         }

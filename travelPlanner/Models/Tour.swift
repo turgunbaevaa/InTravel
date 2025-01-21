@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseCore
 
 struct Tour {
     let id: String
@@ -14,4 +15,15 @@ struct Tour {
     let endDate: Date
     let location: String
     let details: String
+    
+    func toDictionary() -> [String: Any] {
+        return [
+            "id": id,
+            "name": name,
+            "startDate": Timestamp(date: startDate), // Convert Date to Firestore Timestamp
+            "endDate": Timestamp(date: endDate),     // Convert Date to Firestore Timestamp
+            "location": location,
+            "details": details
+        ]
+    }
 }

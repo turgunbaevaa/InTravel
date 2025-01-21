@@ -8,11 +8,16 @@
 import UIKit
 import FirebaseFirestore
 
+import UIKit
+import FirebaseFirestore
+
 class MyTripsController: UIViewController {
     
     private let calendarManager = CalendarManager()
     private var selectedDate: Date = Date()
-    private var tours: [Tour] = [] // Fetched from Firebase
+    private var tours: [Tour] = []
+    private var selectedYear: Int = Calendar.current.component(.year, from: Date())
+    private var selectedMonth: Int = Calendar.current.component(.month, from: Date())
 
     private let myTripsView = MyTripsView()
     private let db = Firestore.firestore()
@@ -23,42 +28,34 @@ class MyTripsController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupView()
-        configureCollectionView()
+        configureYearAndMonthScrolls()
+        configureCalendarView()
         configureTableView()
         fetchTours()
+
+        // Initialize the default year and month
+        selectedYear = Calendar.current.component(.year, from: Date())
+        selectedMonth = Calendar.current.component(.month, from: Date())
+
+        updateCalendar(for: selectedYear, month: selectedMonth)
+        
+        // Add Target for Add Tour Button
+        myTripsView.addTourButton.addTarget(self, action: #selector(addTourButtonTapped), for: .touchUpInside)
     }
     
-    // MARK: - Setup
-    private func setupView() {
-        let years = ["2025", "2026", "2027", "2028", "2029", "2030"]
-        for year in years {
-            let yearButton = UIButton()
-            yearButton.setTitle(year, for: .normal)
-            yearButton.setTitleColor(year == "2025" ? .orange : .white, for: .normal)
-            yearButton.addTarget(self, action: #selector(selectYear(_:)), for: .touchUpInside)
-            myTripsView.yearStackView.addArrangedSubview(yearButton)
-        }
+    // MARK: - Configure Views
+    private func configureYearAndMonthScrolls() {
+        myTripsView.yearScrollView.register(YearCell.self, forCellWithReuseIdentifier: YearCell.identifier)
+        myTripsView.yearScrollView.dataSource = self
+        myTripsView.yearScrollView.delegate = self
 
-        // Setup month buttons
-        let months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN"]
-        for (index, month) in months.enumerated() {
-            let monthButton = UIButton()
-            monthButton.setTitle(month, for: .normal)
-            monthButton.setTitleColor(index == 0 ? .orange : .white, for: .normal)
-            monthButton.addTarget(self, action: #selector(selectMonth(_:)), for: .touchUpInside)
-            myTripsView.monthStackView.addArrangedSubview(monthButton)
-        }
-
-        // Set initial month label
-        myTripsView.monthLabel.text = calendarManager.getMonthName(for: selectedDate)
-        myTripsView.addTourButton.addTarget(self, action: #selector(addTourTapped), for: .touchUpInside)
+        myTripsView.monthScrollView.register(MonthCell.self, forCellWithReuseIdentifier: MonthCell.identifier)
+        myTripsView.monthScrollView.dataSource = self
+        myTripsView.monthScrollView.delegate = self
     }
     
-    private func configureCollectionView() {
-        myTripsView.collectionView.register(CalendarCell.self, forCellWithReuseIdentifier: CalendarCell.identifier)
-        myTripsView.collectionView.dataSource = self
-        myTripsView.collectionView.delegate = self
+    private func configureCalendarView() {
+        myTripsView.calendarView.updateCalendar(for: selectedDate, tours: tours)
     }
     
     private func configureTableView() {
@@ -85,61 +82,83 @@ class MyTripsController: UIViewController {
                 
                 return Tour(id: doc.documentID, name: name, startDate: startDate, endDate: endDate, location: location, details: remarks)
             }
-            self.myTripsView.collectionView.reloadData()
+            self.myTripsView.calendarView.updateCalendar(for: self.selectedDate, tours: self.tours)
             self.myTripsView.tableView.reloadData()
         }
     }
     
-    // MARK: - Actions
-    @objc private func selectMonth(_ sender: UIButton) {
-        guard let monthName = sender.title(for: .normal) else { return }
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM yyyy"
-        if let newDate = formatter.date(from: "\(monthName) \(Calendar.current.component(.year, from: calendarManager.selectedDate))") {
-            calendarManager.selectedDate = newDate
-            myTripsView.monthLabel.text = calendarManager.getMonthName(for: newDate)
-            myTripsView.collectionView.reloadData()
-        }
-    }
-
-    @objc private func selectYear(_ sender: UIButton) {
-        guard let year = sender.title(for: .normal), let newYear = Int(year) else { return }
-        if let newDate = calendarManager.calendar.date(bySetting: .year, value: newYear, of: calendarManager.selectedDate) {
-            calendarManager.selectedDate = newDate
-            myTripsView.monthLabel.text = calendarManager.getMonthName(for: newDate)
-            myTripsView.collectionView.reloadData()
+    // MARK: - Update Calendar
+    private func updateCalendar(for year: Int, month: Int) {
+        let dateComponents = DateComponents(year: year, month: month)
+        if let newDate = Calendar.current.date(from: dateComponents) {
+            selectedDate = newDate
+            myTripsView.calendarView.updateCalendar(for: selectedDate, tours: tours)
         }
     }
     
-    @objc private func addTourTapped() {
-        let addTourVC = AddTourController()
-        navigationController?.pushViewController(addTourVC, animated: true)
+    private func updateSelectedMonthAndYear(year: Int, month: Int) {
+        let dateComponents = DateComponents(year: year, month: month)
+        if let newDate = Calendar.current.date(from: dateComponents) {
+            selectedDate = newDate
+            myTripsView.calendarView.updateCalendar(for: newDate, tours: tours)
+        }
+    }
+    
+    @objc private func addTourButtonTapped() {
+        let addTourController = AddTourController()
+        //addTourController.delegate = self 
+        navigationController?.pushViewController(addTourController, animated: true)
     }
 }
 
-// MARK: - UICollectionViewDataSource & UICollectionViewDelegate
-extension MyTripsController: UICollectionViewDataSource, UICollectionViewDelegate {
+// MARK: - UICollectionViewDataSource & UICollectionViewDelegate for Year/Month Scrolls
+extension MyTripsController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return calendarManager.getDaysInMonth(for: calendarManager.selectedDate).count
+        if collectionView == myTripsView.yearScrollView {
+            return 10
+        } else if collectionView == myTripsView.monthScrollView {
+            return 12
+        }
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CalendarCell.identifier, for: indexPath) as! CalendarCell
-        let days = calendarManager.getDaysInMonth(for: calendarManager.selectedDate)
-
-        // Safely unwrap the optional date at the given index
-        if let date = days[indexPath.item] {
-            let isToday = calendarManager.isToday(date)
-            let isTourDate = calendarManager.isTourDate(date, for: tours)
-            
-            // Configure the cell with valid date
-            cell.configure(with: date, calendar: Calendar.current, isToday: isToday, isTourDate: isTourDate)
-        } else {
-            // Configure the cell for an empty placeholder (e.g., empty date slot at the start of the month)
-            cell.configure(with: nil, calendar: Calendar.current, isToday: false, isTourDate: false)
+        if collectionView == myTripsView.yearScrollView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: YearCell.identifier, for: indexPath) as! YearCell
+            let year = Calendar.current.component(.year, from: Date()) + indexPath.item
+            let isSelected = year == selectedYear
+            cell.configure(year: year, isSelected: isSelected)
+            return cell
+        } else if collectionView == myTripsView.monthScrollView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MonthCell.identifier, for: indexPath) as! MonthCell
+            let monthName = DateFormatter().monthSymbols[indexPath.item]
+            let isSelected = (indexPath.item + 1) == selectedMonth
+            cell.configure(month: monthName, isSelected: isSelected)
+            return cell
+        }
+        return UICollectionViewCell()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView == myTripsView.yearScrollView {
+            selectedYear = Calendar.current.component(.year, from: Date()) + indexPath.item
+        } else if collectionView == myTripsView.monthScrollView {
+            selectedMonth = indexPath.item + 1
         }
         
-        return cell
+        // Ensure both year and month are selected before updating the calendar
+        updateCalendar(for: selectedYear, month: selectedMonth)
+        
+        // Reload scroll views to reflect selection changes
+        myTripsView.yearScrollView.reloadData()
+        myTripsView.monthScrollView.reloadData()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if collectionView == myTripsView.yearScrollView || collectionView == myTripsView.monthScrollView {
+            return CGSize(width: 80, height: 40)
+        }
+        return CGSize.zero
     }
 }
 
