@@ -39,6 +39,10 @@
 		0A818DB42D3BDE2E0024ACD9 /* YearMonthCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818DB32D3BDE2E0024ACD9 /* YearMonthCell.swift */; };
 		0A818DB62D3E4E060024ACD9 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818DB52D3E4E060024ACD9 /* CalendarView.swift */; };
 		0A818DB82D3F835E0024ACD9 /* TourManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818DB72D3F835E0024ACD9 /* TourManager.swift */; };
+		0A818DBA2D40F0B80024ACD9 /* TourDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818DB92D40F0B80024ACD9 /* TourDetailsView.swift */; };
+		0A818DBC2D40F0D10024ACD9 /* TourDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818DBB2D40F0D10024ACD9 /* TourDetailsController.swift */; };
+		0A818DBE2D40F0F20024ACD9 /* EditTourController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818DBD2D40F0F20024ACD9 /* EditTourController.swift */; };
+		0A818DC02D40F1040024ACD9 /* EditTourView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818DBF2D40F1040024ACD9 /* EditTourView.swift */; };
 		0AF05A7C2D25AECA001CE2B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF05A7B2D25AECA001CE2B7 /* AppDelegate.swift */; };
 		0AF05A7E2D25AECA001CE2B7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF05A7D2D25AECA001CE2B7 /* SceneDelegate.swift */; };
 		0AF05A852D25AECC001CE2B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AF05A842D25AECC001CE2B7 /* Assets.xcassets */; };
@@ -93,6 +97,10 @@
 		0A818DB32D3BDE2E0024ACD9 /* YearMonthCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearMonthCell.swift; sourceTree = "<group>"; };
 		0A818DB52D3E4E060024ACD9 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		0A818DB72D3F835E0024ACD9 /* TourManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourManager.swift; sourceTree = "<group>"; };
+		0A818DB92D40F0B80024ACD9 /* TourDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourDetailsView.swift; sourceTree = "<group>"; };
+		0A818DBB2D40F0D10024ACD9 /* TourDetailsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourDetailsController.swift; sourceTree = "<group>"; };
+		0A818DBD2D40F0F20024ACD9 /* EditTourController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTourController.swift; sourceTree = "<group>"; };
+		0A818DBF2D40F1040024ACD9 /* EditTourView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTourView.swift; sourceTree = "<group>"; };
 		0AF05A782D25AECA001CE2B7 /* travelPlanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = travelPlanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AF05A7B2D25AECA001CE2B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0AF05A7D2D25AECA001CE2B7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -214,6 +222,8 @@
 				0A818DA52D3B10B40024ACD9 /* MyTripsView.swift */,
 				0A818DA72D3B120E0024ACD9 /* AddTourView.swift */,
 				0A818DB52D3E4E060024ACD9 /* CalendarView.swift */,
+				0A818DB92D40F0B80024ACD9 /* TourDetailsView.swift */,
+				0A818DBF2D40F1040024ACD9 /* EditTourView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -231,6 +241,8 @@
 				0A818D852D3439A30024ACD9 /* BudgetController.swift */,
 				0A818D872D3439BD0024ACD9 /* AccountController.swift */,
 				0A818DA92D3B12500024ACD9 /* AddTourController.swift */,
+				0A818DBB2D40F0D10024ACD9 /* TourDetailsController.swift */,
+				0A818DBD2D40F0F20024ACD9 /* EditTourController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -428,6 +440,7 @@
 			files = (
 				0AF05AA02D25DF75001CE2B7 /* TravelPlannerTitleLabel.swift in Sources */,
 				0A818D8E2D3662800024ACD9 /* HomeView.swift in Sources */,
+				0A818DBC2D40F0D10024ACD9 /* TourDetailsController.swift in Sources */,
 				0A818DB62D3E4E060024ACD9 /* CalendarView.swift in Sources */,
 				0A818D8A2D3439F50024ACD9 /* TabBarController.swift in Sources */,
 				0A818D842D3439850024ACD9 /* MyTripsController.swift in Sources */,
@@ -447,9 +460,11 @@
 				0A818D9D2D393A440024ACD9 /* Tour.swift in Sources */,
 				0AF05AB52D25EFD3001CE2B7 /* RegisterUserRequest.swift in Sources */,
 				0A818D932D3805C20024ACD9 /* NetworkManager.swift in Sources */,
+				0A818DC02D40F1040024ACD9 /* EditTourView.swift in Sources */,
 				0A818DB42D3BDE2E0024ACD9 /* YearMonthCell.swift in Sources */,
 				0A818D862D3439A30024ACD9 /* BudgetController.swift in Sources */,
 				0A818DB22D3BDA8D0024ACD9 /* MonthCell.swift in Sources */,
+				0A818DBE2D40F0F20024ACD9 /* EditTourController.swift in Sources */,
 				0A818D992D38526B0024ACD9 /* HeaderView.swift in Sources */,
 				0AF05A992D25DB3F001CE2B7 /* HomeController.swift in Sources */,
 				0AF05A972D25DB21001CE2B7 /* RegisterController.swift in Sources */,
@@ -469,6 +484,7 @@
 				0A818DA22D393ACE0024ACD9 /* CalendarCell.swift in Sources */,
 				0A818D762D2610400024ACD9 /* SignUpView.swift in Sources */,
 				0AF05AAC2D25E4B2001CE2B7 /* TravelPlannerTextField.swift in Sources */,
+				0A818DBA2D40F0B80024ACD9 /* TourDetailsView.swift in Sources */,
 				0A818DA82D3B120F0024ACD9 /* AddTourView.swift in Sources */,
 				0AF05A9C2D25DC64001CE2B7 /* AuthHeaderView.swift in Sources */,
 				0A818DB02D3BD9B90024ACD9 /* YearCell.swift in Sources */,

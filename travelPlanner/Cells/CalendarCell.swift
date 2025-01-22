@@ -42,7 +42,6 @@ class CalendarCell: UICollectionViewCell {
 
         let day = calendar.component(.day, from: date)
         dateLabel.text = "\(day)"
-        dateLabel.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         dateLabel.textAlignment = .center
 
         if isSelected {

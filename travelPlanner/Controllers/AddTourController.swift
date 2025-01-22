@@ -15,6 +15,7 @@ class AddTourController: UIViewController {
     private let selectedMonth = Date()
     private let calendarManager = CalendarManager()
     private var tours: [Tour] = []
+    var selectedDate: Date?
     
     override func loadView() {
         view = addTourView
@@ -50,10 +51,8 @@ class AddTourController: UIViewController {
             return
         }
         
-        // Debugging: Print the parsed data
         print("Parsed Data: \(name), \(location), \(details), \(startDate)")
         
-        // Dummy End Date (for now, assume the same date)
         let endDate = startDate
         
         // Generate a unique ID for the tour
@@ -71,14 +70,19 @@ class AddTourController: UIViewController {
         }
     }
     
-    // Helper function to parse date from string
+    private func populateSelectedDate() {
+        guard let selectedDate = selectedDate else { return }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        addTourView.dateLabel.text = formatter.string(from: selectedDate)
+    }
+    
     private func parseDate(from dateString: String) -> Date? {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM.yyyy"
         return formatter.date(from: dateString)
     }
     
-    // Helper function to show an alert
     private func showAlert(message: String) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
@@ -93,35 +97,25 @@ extension AddTourController: UICollectionViewDataSource, UICollectionViewDelegat
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CalendarCell.identifier, for: indexPath) as! CalendarCell
-        
+
         let days = calendarManager.getDaysInMonth(for: calendarManager.selectedDate)
         let date = days[indexPath.item]
-        
-        // Configure the cell
-        if let date = date {
-            let isToday = calendarManager.isToday(date)
-            let isTourDate = calendarManager.isTourDate(date, for: tours) // Update this based on your tours logic
-            let isSelected = (calendarManager.selectedDate == date) // Example logic for selection
-            cell.configure(with: date, calendar: Calendar.current, isToday: isToday, isTourDate: isTourDate, isSelected: isSelected)
-        } else {
-            // Empty placeholder cells
-            cell.configure(with: nil, calendar: Calendar.current, isToday: false, isTourDate: false, isSelected: false)
-        }
+
+        let isSelected = date == calendarManager.selectedDate
+        let isToday = date != nil && calendarManager.isToday(date!)
+        let isTourDate = date != nil && calendarManager.isTourDate(date!, for: tours)
+
+        cell.configure(with: date, calendar: Calendar.current, isToday: isToday, isTourDate: isTourDate, isSelected: isSelected)
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let days = calendarManager.getDaysInMonth(for: calendarManager.selectedDate)
-        if let selectedDate = days[indexPath.item] {
-            calendarManager.selectedDate = selectedDate
-            
-            // Format the selected date and update the dateLabel
-            let formatter = DateFormatter()
-            formatter.dateFormat = "dd.MM.yyyy"
-            addTourView.dateLabel.text = formatter.string(from: selectedDate)
-            
-            collectionView.reloadData()
-        }
+        guard let selectedDate = days[indexPath.item] else { return }
+
+        calendarManager.selectedDate = selectedDate
+
+        collectionView.reloadData()
     }
 }

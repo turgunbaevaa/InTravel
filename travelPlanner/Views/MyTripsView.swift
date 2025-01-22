@@ -46,12 +46,15 @@ class MyTripsView: UIView {
         return collectionView
     }()
     
-    let calendarView = CalendarView() 
+    let calendarView = CalendarView()
     
-    let tableView: UITableView = {
-        let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        return tableView
+    let toursCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.itemSize = CGSize(width: UIScreen.main.bounds.width - 32, height: 100)
+        layout.minimumLineSpacing = 8
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .clear
+        return collectionView
     }()
     
     // MARK: - Initialization
@@ -67,7 +70,7 @@ class MyTripsView: UIView {
     
     // MARK: - Setup
     private func setupConstraints() {
-        addSubviews(addTourButton, yearScrollView, monthScrollView, calendarView, tableView)
+        addSubviews(addTourButton, yearScrollView, monthScrollView, calendarView, toursCollectionView)
         
         addTourButton.snp.makeConstraints { make in
             make.top.equalTo(safeAreaLayoutGuide.snp.top).offset(8)
@@ -94,8 +97,8 @@ class MyTripsView: UIView {
             make.height.equalTo(300)
         }
         
-        tableView.snp.makeConstraints { make in
-            make.top.equalTo(calendarView.snp.bottom).offset(8)
+        toursCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(calendarView.snp.bottom).offset(16)
             make.leading.trailing.bottom.equalToSuperview()
         }
     }

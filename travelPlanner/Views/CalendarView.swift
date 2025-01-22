@@ -123,8 +123,8 @@ extension CalendarView: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let daysInMonth = calendarManager.getDaysInMonth(for: selectedDate)
         if let date = daysInMonth[indexPath.item] {
-            selectedDay = date // Update the selected day
-            collectionView.reloadData() // Refresh the collection view to apply the highlight
+            selectedDay = date
+            collectionView.reloadData()
         }
     }
 }
