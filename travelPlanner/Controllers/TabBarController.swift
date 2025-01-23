@@ -32,10 +32,9 @@ class TabBarController: UITabBarController {
         tabBar.tintColor = UIColor(hex: "#362E83")
         tabBar.unselectedItemTintColor = UIColor(hex: "#6C757D")
         
-        // Customize the navigation bar title appearance
         let navBarAppearance = UINavigationBar.appearance()
-        navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white] // Large titles
-        navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white] // Small titles
+        navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
     }
     
     //MARK: Tab Setup

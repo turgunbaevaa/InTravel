@@ -7,9 +7,15 @@
 
 import UIKit
 
+protocol EditTourDelegate: AnyObject {
+    func tourDidUpdate(_ updatedTour: Tour)
+    func tourDidDelete(_ deletedTourID: String)
+}
+
 class EditTourController: UIViewController {
 
     var tour: Tour?
+    weak var delegate: EditTourDelegate? 
 
     private let editView = EditTourView()
 
@@ -26,5 +32,41 @@ class EditTourController: UIViewController {
         }
 
         editView.configure(with: tour)
+        editView.setUpdateButtonTarget(self, action: #selector(updateButtonTapped))
+        editView.setDeleteButtonTarget(self, action: #selector(deleteButtonTapped))
+    }
+    
+    @objc private func updateButtonTapped() {
+        guard let tour = tour else { return }
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        let startDate = formatter.date(from: editView.startDateField.text ?? "") ?? tour.startDate
+        let endDate = formatter.date(from: editView.endDateField.text ?? "") ?? tour.endDate
+
+        let updatedTour = Tour(
+            id: tour.id,
+            name: editView.tourNameField.text ?? tour.name,
+            startDate: startDate,
+            endDate: endDate,
+            location: editView.locationField.text ?? tour.location,
+            details: editView.remarksField.text ?? tour.details
+        )
+
+        TourManager.shared.updateTour(tour: updatedTour)
+
+        delegate?.tourDidUpdate(updatedTour)
+
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func deleteButtonTapped() {
+        guard let tourID = tour?.id else { return }
+
+        TourManager.shared.deleteTour(tourID: tourID)
+
+        delegate?.tourDidDelete(tourID)
+
+        navigationController?.popViewController(animated: true)
     }
 }

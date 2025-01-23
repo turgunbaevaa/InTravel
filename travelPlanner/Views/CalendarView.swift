@@ -17,7 +17,7 @@ class CalendarView: UIView {
     var tours: [Tour] = []
     private var selectedDay: Date? // Track the selected day
     
-    // Subviews
+    //MARK: Subviews
     private let monthLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
@@ -72,19 +72,20 @@ class CalendarView: UIView {
     
     private func setupConstraints() {
         monthLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(16)
+            make.top.equalToSuperview().offset(8)
             make.centerX.equalToSuperview()
         }
         
         weekdayHeader.snp.makeConstraints { make in
-            make.top.equalTo(monthLabel.snp.bottom).offset(16)
+            make.top.equalTo(monthLabel.snp.bottom).offset(8)
             make.leading.trailing.equalToSuperview().inset(16)
             make.height.equalTo(20)
         }
         
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(weekdayHeader.snp.bottom).offset(8)
-            make.leading.trailing.bottom.equalToSuperview().inset(16)
+            make.leading.trailing.equalToSuperview().inset(16)
+            make.bottom.equalToSuperview().offset(-8)
         }
     }
     
@@ -115,7 +116,7 @@ extension CalendarView: UICollectionViewDataSource, UICollectionViewDelegate {
         let date = daysInMonth[indexPath.item]
         let isToday = date != nil && calendarManager.isToday(date!)
         let isTourDate = date != nil && calendarManager.isTourDate(date!, for: tours)
-        let isSelected = date == selectedDay // Check if the date matches the selected day
+        let isSelected = date == selectedDay
         cell.configure(with: date, calendar: calendar, isToday: isToday, isTourDate: isTourDate, isSelected: isSelected)
         return cell
     }

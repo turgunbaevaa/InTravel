@@ -21,8 +21,8 @@ class TourManager {
             "location": tour.location,
             "details": tour.details
         ]
-        
-        db.collection("tour").addDocument(data: tourData) { error in
+
+        db.collection("tours").document(tour.id).setData(tourData) { error in
             if let error = error {
                 print("Error adding tour: \(error.localizedDescription)")
             } else {
@@ -33,7 +33,7 @@ class TourManager {
     
     func fetchTours(completion: @escaping ([Tour]) -> Void) {
         let db = Firestore.firestore()
-        db.collection("tour").getDocuments { snapshot, error in
+        db.collection("tours").getDocuments { snapshot, error in
             if let error = error {
                 print("Error fetching tours: \(error.localizedDescription)")
                 completion([])
@@ -55,8 +55,6 @@ class TourManager {
     }
 
     func updateTour(tour: Tour) {
-        let id = tour.id // No need for a guard statement if id is non-optional
-        
         let db = Firestore.firestore()
         let tourData: [String: Any] = [
             "name": tour.name,
@@ -65,10 +63,15 @@ class TourManager {
             "location": tour.location,
             "details": tour.details
         ]
-        
-        db.collection("tour").document(id).updateData(tourData) { error in
+
+        db.collection("tours").document(tour.id).updateData(tourData) { error in
             if let error = error {
-                print("Error updating tour: \(error.localizedDescription)")
+                if (error as NSError).domain == FirestoreErrorDomain,
+                   (error as NSError).code == FirestoreErrorCode.notFound.rawValue {
+                    print("Document not found: \(tour.id)")
+                } else {
+                    print("Error updating tour: \(error.localizedDescription)")
+                }
             } else {
                 print("Tour updated successfully!")
             }
@@ -77,7 +80,7 @@ class TourManager {
 
     func deleteTour(tourID: String) {
         let db = Firestore.firestore()
-        db.collection("tour").document(tourID).delete { error in
+        db.collection("tours").document(tourID).delete { error in
             if let error = error {
                 print("Error deleting tour: \(error.localizedDescription)")
             } else {
@@ -85,5 +88,4 @@ class TourManager {
             }
         }
     }
-
 }

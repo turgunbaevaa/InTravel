@@ -165,6 +165,14 @@
 			path = Managers;
 			sourceTree = "<group>";
 		};
+		0A818DC12D41D3D50024ACD9 /* TextViews */ = {
+			isa = PBXGroup;
+			children = (
+				0A818DAD2D3B198F0024ACD9 /* CustomTextView.swift */,
+			);
+			path = TextViews;
+			sourceTree = "<group>";
+		};
 		0AF05A6F2D25AECA001CE2B7 = {
 			isa = PBXGroup;
 			children = (
@@ -250,10 +258,10 @@
 		0AF05A9E2D25DF2D001CE2B7 /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
+				0A818DC12D41D3D50024ACD9 /* TextViews */,
 				0AF05AAE2D25E7EC001CE2B7 /* Buttons */,
 				0AF05AAD2D25E4BB001CE2B7 /* TextFields */,
 				0AF05AA82D25E15B001CE2B7 /* Labels */,
-				0A818DAD2D3B198F0024ACD9 /* CustomTextView.swift */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";

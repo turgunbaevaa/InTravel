@@ -12,7 +12,7 @@ class HorizontalSectionCell: UICollectionViewCell {
     static let reuseId = "horizontal_section_cell"
 
     var horizontalCollectionView: UICollectionView!
-    var destinations: [Destination] = [] { // Data for this section
+    var destinations: [Destination] = [] {
         didSet {
             horizontalCollectionView.reloadData()
         }
@@ -28,13 +28,13 @@ class HorizontalSectionCell: UICollectionViewCell {
     }
 
     private func setupHorizontalCollectionView() {
-        // Create a horizontal layout for the child collection view
+        // Horizontal layout for the child collection view
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 8
-        layout.itemSize = CGSize(width: 200, height: 250) // Adjust item size
+        layout.itemSize = CGSize(width: 200, height: 250)
 
-        // Create the horizontal collection view
+        // Horizontal collection view
         horizontalCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         horizontalCollectionView.showsHorizontalScrollIndicator = false
         horizontalCollectionView.backgroundColor = .clear
@@ -42,7 +42,6 @@ class HorizontalSectionCell: UICollectionViewCell {
         horizontalCollectionView.dataSource = self
         horizontalCollectionView.delegate = self
 
-        // Add it to the cell
         contentView.addSubview(horizontalCollectionView)
         horizontalCollectionView.snp.makeConstraints { make in
             make.edges.equalToSuperview()

@@ -31,8 +31,8 @@ class MyTripsController: UIViewController {
         super.viewDidLoad()
         configureYearAndMonthScrolls()
         configureCalendarView()
-        configureToursCollectionView()
         fetchTours()
+        configureToursCollectionView()
         
         selectedYear = Calendar.current.component(.year, from: Date())
         selectedMonth = Calendar.current.component(.month, from: Date())
@@ -61,50 +61,41 @@ class MyTripsController: UIViewController {
         myTripsView.toursCollectionView.register(TourCell.self, forCellWithReuseIdentifier: TourCell.identifier)
         myTripsView.toursCollectionView.dataSource = self
         myTripsView.toursCollectionView.delegate = self
-        myTripsView.toursCollectionView.backgroundColor = .red
     }
     
     // MARK: - Fetch Tours
     private func fetchTours() {
+        print("Fetching tours...")
         db.collection("tours").getDocuments { [weak self] snapshot, error in
             guard let self = self, let documents = snapshot?.documents else {
                 print("Error fetching tours: \(error?.localizedDescription ?? "Unknown error")")
                 return
             }
 
-            print("Fetched documents count: \(documents.count)")
-            
             self.tours = documents.compactMap { doc in
                 let data = doc.data()
-                print("Document Data: \(data)") // Debugging
-
-                // Parse fields, providing default values or handling optional fields
                 guard let name = data["name"] as? String,
-                      let startDateTimestamp = data["startDate"] as? Timestamp,
-                      let endDateTimestamp = data["endDate"] as? Timestamp,
+                      let startDate = (data["startDate"] as? Timestamp)?.dateValue(),
+                      let endDate = (data["endDate"] as? Timestamp)?.dateValue(),
                       let location = data["location"] as? String,
-                      let remarks = data["details"] as? String else {
-                    print("Skipping document \(doc.documentID): Missing or invalid fields")
+                      let details = data["details"] as? String else {
                     return nil
                 }
 
-                let startDate = startDateTimestamp.dateValue()
-                let endDate = endDateTimestamp.dateValue()
-
-                // Use the document ID instead of the "id" field in the document
                 return Tour(
-                    id: doc.documentID, // Firestore document ID
+                    id: doc.documentID,
                     name: name,
                     startDate: startDate,
                     endDate: endDate,
                     location: location,
-                    details: remarks
+                    details: details
                 )
             }
 
-            print("Tours loaded: \(self.tours.count)")
-            self.myTripsView.calendarView.updateCalendar(for: self.selectedDate, tours: self.tours)
-            self.myTripsView.toursCollectionView.reloadData()
+            DispatchQueue.main.async {
+                self.myTripsView.toursCollectionView.reloadData()
+                self.myTripsView.calendarView.updateCalendar(for: self.selectedDate, tours: self.tours)
+            }
         }
     }
     
@@ -128,6 +119,7 @@ class MyTripsController: UIViewController {
     @objc private func addTourButtonTapped() {
         let addTourController = AddTourController()
         addTourController.selectedDate = selectedDay
+        addTourController.delegate = self
         navigationController?.pushViewController(addTourController, animated: true)
     }
 }
@@ -140,7 +132,6 @@ extension MyTripsController: UICollectionViewDataSource, UICollectionViewDelegat
         } else if collectionView == myTripsView.monthScrollView {
             return 12
         } else if collectionView == myTripsView.toursCollectionView {
-            print("Number of tours in collectionView: \(tours.count)")
             return tours.count
         }
         return 0
@@ -162,7 +153,6 @@ extension MyTripsController: UICollectionViewDataSource, UICollectionViewDelegat
         } else if collectionView == myTripsView.toursCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TourCell.identifier, for: indexPath) as! TourCell
             let tour = tours[indexPath.item]
-            print("Configuring cell for tour: \(tour.name)") // Debugging
             cell.configure(with: tour)
             return cell
         }
@@ -180,17 +170,45 @@ extension MyTripsController: UICollectionViewDataSource, UICollectionViewDelegat
         } else if collectionView == myTripsView.toursCollectionView {
             let selectedTour = tours[indexPath.item]
             let detailsController = TourDetailsController()
-            detailsController.tour = selectedTour 
+            detailsController.tour = selectedTour
+            detailsController.delegate = self
             navigationController?.pushViewController(detailsController, animated: true)
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == myTripsView.yearScrollView || collectionView == myTripsView.monthScrollView {
-            return CGSize(width: 80, height: 40)
+            return CGSize(width: 70, height: 35)
         } else if collectionView == myTripsView.toursCollectionView {
             return CGSize(width: UIScreen.main.bounds.width - 32, height: 100)
         }
         return CGSize.zero
+    }
+}
+
+extension MyTripsController: AddTourDelegate {
+    func didAddTour(_ tour: Tour) {
+        tours.append(tour)
+
+        myTripsView.toursCollectionView.reloadData()
+        myTripsView.calendarView.updateCalendar(for: selectedDate, tours: tours)
+    }
+}
+
+extension MyTripsController: EditTourDelegate {
+    func tourDidUpdate(_ updatedTour: Tour) {
+        if let index = tours.firstIndex(where: { $0.id == updatedTour.id }) {
+            tours[index] = updatedTour
+        }
+
+        myTripsView.toursCollectionView.reloadData()
+        myTripsView.calendarView.updateCalendar(for: selectedDate, tours: tours)
+    }
+
+    func tourDidDelete(_ deletedTourID: String) {
+        tours.removeAll { $0.id == deletedTourID }
+
+        myTripsView.toursCollectionView.reloadData()
+        myTripsView.calendarView.updateCalendar(for: selectedDate, tours: tours)
     }
 }

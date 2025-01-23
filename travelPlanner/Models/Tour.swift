@@ -26,4 +26,13 @@ struct Tour {
             "details": details
         ]
     }
+    
+    init(id: String = UUID().uuidString, name: String, startDate: Date, endDate: Date, location: String, details: String) {
+            self.id = id
+            self.name = name
+            self.startDate = startDate
+            self.endDate = endDate
+            self.location = location
+            self.details = details
+        }
 }

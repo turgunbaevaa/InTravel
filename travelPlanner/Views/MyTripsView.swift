@@ -13,7 +13,20 @@ import SnapKit
 
 class MyTripsView: UIView {
     
-    // Subviews
+    // MARK: Subviews
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        return scrollView
+    }()
+    
+    private let contentStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        return stackView
+    }()
+    
     let addTourButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Add Tour", for: .normal)
@@ -27,7 +40,7 @@ class MyTripsView: UIView {
     let yearScrollView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 60, height: 40)
+        layout.itemSize = CGSize(width: 70, height: 35)
         layout.minimumInteritemSpacing = 8
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
@@ -38,7 +51,7 @@ class MyTripsView: UIView {
     let monthScrollView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 80, height: 40)
+        layout.itemSize = CGSize(width: 70, height: 35)
         layout.minimumInteritemSpacing = 8
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
@@ -75,26 +88,26 @@ class MyTripsView: UIView {
         addTourButton.snp.makeConstraints { make in
             make.top.equalTo(safeAreaLayoutGuide.snp.top).offset(8)
             make.trailing.equalToSuperview().inset(16)
-            make.width.equalTo(100)
-            make.height.equalTo(40)
+            make.width.equalTo(90)
+            make.height.equalTo(30)
         }
         
         yearScrollView.snp.makeConstraints { make in
             make.top.equalTo(addTourButton.snp.bottom).offset(8)
             make.leading.trailing.equalToSuperview().inset(16)
-            make.height.equalTo(40)
+            make.height.equalTo(35)
         }
         
         monthScrollView.snp.makeConstraints { make in
             make.top.equalTo(yearScrollView.snp.bottom).offset(8)
             make.leading.trailing.equalToSuperview().inset(16)
-            make.height.equalTo(40)
+            make.height.equalTo(35)
         }
         
         calendarView.snp.makeConstraints { make in
             make.top.equalTo(monthScrollView.snp.bottom).offset(8)
             make.leading.trailing.equalToSuperview().inset(8)
-            make.height.equalTo(300)
+            make.height.equalTo(280)
         }
         
         toursCollectionView.snp.makeConstraints { make in

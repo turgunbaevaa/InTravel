@@ -21,7 +21,7 @@ class NetworkManager {
         db.collection("destinations").getDocuments { snapshot, error in
             if let error = error {
                 print("Error fetching places:", error.localizedDescription)
-                completion(nil, error) // Return error
+                completion(nil, error)
                 return
             }
             
@@ -33,7 +33,7 @@ class NetworkManager {
             // Fetch "Hotels"
             db.collection("hotels").getDocuments { snapshot, error in
                 if let error = error {
-                    completion(nil, error) // Return error
+                    completion(nil, error)
                     return
                 }
                 
@@ -42,7 +42,6 @@ class NetworkManager {
                     allDestinations.append(contentsOf: hotels)
                 }
                 
-                // Return combined data via completion handler
                 completion(allDestinations, nil)
             }
         }

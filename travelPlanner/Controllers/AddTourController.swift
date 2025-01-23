@@ -8,7 +8,12 @@
 import UIKit
 import FirebaseFirestore
 
+protocol AddTourDelegate: AnyObject {
+    func didAddTour(_ tour: Tour)
+}
+
 class AddTourController: UIViewController {
+    weak var delegate: AddTourDelegate?
     
     private let addTourView = AddTourView()
     private let db = Firestore.firestore()
@@ -41,40 +46,33 @@ class AddTourController: UIViewController {
         guard let name = addTourView.tourNameField.text, !name.isEmpty,
               let location = addTourView.locationField.text, !location.isEmpty,
               let details = addTourView.remarksField.text, !details.isEmpty,
-              let startDateString = addTourView.dateLabel.text, !startDateString.isEmpty,
-              let startDate = parseDate(from: startDateString) else {
-            print("Name: \(addTourView.tourNameField.text ?? "nil")")
-            print("Location: \(addTourView.locationField.text ?? "nil")")
-            print("Details: \(addTourView.remarksField.text ?? "nil")")
-            print("Start Date: \(addTourView.dateLabel.text ?? "nil")")
+              let startDateString = addTourView.startDateField.text, !startDateString.isEmpty,
+              let endDateString = addTourView.endDateField.text, !endDateString.isEmpty,
+              let startDate = parseDate(from: startDateString),
+              let endDate = parseDate(from: endDateString) else {
             showAlert(message: "Please fill all required fields.")
             return
         }
-        
-        print("Parsed Data: \(name), \(location), \(details), \(startDate)")
-        
-        let endDate = startDate
-        
-        // Generate a unique ID for the tour
+
         let tourId = UUID().uuidString
-        
         let newTour = Tour(id: tourId, name: name, startDate: startDate, endDate: endDate, location: location, details: details)
-        
-        db.collection("tours").document(tourId).setData(newTour.toDictionary()) { error in
+
+        db.collection("tours").document(tourId).setData(newTour.toDictionary()) { [weak self] error in
             if let error = error {
-                self.showAlert(message: "Error saving tour: \(error.localizedDescription)")
+                self?.showAlert(message: "Error saving tour: \(error.localizedDescription)")
             } else {
-                self.showAlert(message: "Tour saved successfully!")
-                self.navigationController?.popViewController(animated: true)
+                self?.showAlert(message: "Tour saved successfully!", completion: {
+                    self?.delegate?.didAddTour(newTour)
+                    self?.navigationController?.popViewController(animated: true)
+                })
             }
         }
     }
-    
     private func populateSelectedDate() {
         guard let selectedDate = selectedDate else { return }
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM.yyyy"
-        addTourView.dateLabel.text = formatter.string(from: selectedDate)
+        addTourView.startDateField.text = formatter.string(from: selectedDate)
     }
     
     private func parseDate(from dateString: String) -> Date? {
@@ -83,9 +81,11 @@ class AddTourController: UIViewController {
         return formatter.date(from: dateString)
     }
     
-    private func showAlert(message: String) {
+    private func showAlert(message: String, completion: (() -> Void)? = nil) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+            completion?()
+        }))
         present(alert, animated: true)
     }
 }
@@ -97,14 +97,14 @@ extension AddTourController: UICollectionViewDataSource, UICollectionViewDelegat
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CalendarCell.identifier, for: indexPath) as! CalendarCell
-
+        
         let days = calendarManager.getDaysInMonth(for: calendarManager.selectedDate)
         let date = days[indexPath.item]
-
+        
         let isSelected = date == calendarManager.selectedDate
         let isToday = date != nil && calendarManager.isToday(date!)
         let isTourDate = date != nil && calendarManager.isTourDate(date!, for: tours)
-
+        
         cell.configure(with: date, calendar: Calendar.current, isToday: isToday, isTourDate: isTourDate, isSelected: isSelected)
         
         return cell

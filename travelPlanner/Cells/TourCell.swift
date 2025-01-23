@@ -11,24 +11,32 @@ import SnapKit
 class TourCell: UICollectionViewCell {
     static let identifier = "tour_cell"
     
+    private let tourImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = 12
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        label.textColor = .white
+        label.textColor = UIColor(hex: "#362E83")
         return label
     }()
     
     private let dateLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        label.textColor = .lightGray
+        label.textColor = UIColor(hex: "#362E83")
         return label
     }()
     
     private let locationLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        label.textColor = .lightGray
+        label.textColor = UIColor(hex: "#362E83")
         return label
     }()
     
@@ -44,26 +52,32 @@ class TourCell: UICollectionViewCell {
     }
     
     private func setupCellAppearance() {
-        //contentView.backgroundColor = UIColor(hex: "#362E83")
-        contentView.backgroundColor = .lightGray
-        contentView.layer.cornerRadius = 8
+        contentView.backgroundColor = .white
+        contentView.layer.cornerRadius = 12
         contentView.layer.masksToBounds = true
     }
     
     private func setupSubviews() {
+        contentView.addSubview(tourImageView)
+        
         let stackView = UIStackView(arrangedSubviews: [titleLabel, dateLabel, locationLabel])
         stackView.axis = .vertical
         stackView.spacing = 4
-        
         contentView.addSubview(stackView)
     }
     
     private func setupConstraints() {
-        guard let stackView = contentView.subviews.first as? UIStackView else { return }
+        tourImageView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(2)
+            make.centerY.equalToSuperview()
+            make.width.height.equalTo(96)
+        }
+        
+        guard let stackView = contentView.subviews.last as? UIStackView else { return }
         stackView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(16)
-            make.top.equalTo(contentView.snp.top).offset(8)
-            make.bottom.equalTo(contentView.snp.bottom).offset(-8)
+            make.leading.equalTo(tourImageView.snp.trailing).offset(12)
+            make.trailing.equalToSuperview().offset(-16)
+            make.centerY.equalToSuperview()
         }
     }
     
@@ -71,11 +85,13 @@ class TourCell: UICollectionViewCell {
         titleLabel.text = tour.name
 
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d, yyyy"
+        formatter.dateFormat = "dd.MM.yyyy"
         let startDate = formatter.string(from: tour.startDate)
         let endDate = formatter.string(from: tour.endDate)
         dateLabel.text = "\(startDate) - \(endDate)"
 
         locationLabel.text = tour.location
+
+        tourImageView.image = UIImage(named: "placeholder_image")
     }
 }

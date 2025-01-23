@@ -62,7 +62,6 @@ class AuthHeaderView: UIView {
     }
     
     // MARK: - UI Setup
-    
     private func configure() {
         addSubviews(mainTitle, subTitle, emailField, pswField, signInBtn, forgotBtn, signUpBtn)
         

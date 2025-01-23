@@ -41,9 +41,15 @@ class AddTourView: UIView {
         return collectionView
     }()
     
-    let dateLabel: CustomTextField = {
+    let startDateField: CustomTextField = {
         let textField = CustomTextField()
-        textField.setPlaceholder("Date", color: .white)
+        textField.setPlaceholder("Start Date", color: .white)
+        return textField
+    }()
+    
+    let endDateField: CustomTextField = {
+        let textField = CustomTextField()
+        textField.setPlaceholder("End Date", color: .white)
         return textField
     }()
     
@@ -87,36 +93,38 @@ class AddTourView: UIView {
 
     private func setupConstraints() {
         addSubview(scrollView)
-        scrollView.addSubviews(weekdayHeader, calendarView, dateLabel, tourNameField, locationField, remarksField, saveButton)
+        scrollView.addSubviews(weekdayHeader, calendarView, startDateField, endDateField, tourNameField, locationField, remarksField, saveButton)
 
-        // Scroll View Constraints
         scrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
 
-        // Weekday Header Constraints
         weekdayHeader.snp.makeConstraints { make in
             make.top.equalTo(scrollView.contentLayoutGuide.snp.top).offset(16)
             make.leading.trailing.equalTo(scrollView.frameLayoutGuide).inset(16)
             make.height.equalTo(20) // Fixed height for weekday labels
         }
 
-        // Calendar View Constraints
         calendarView.snp.makeConstraints { make in
             make.top.equalTo(weekdayHeader.snp.bottom).offset(8)
             make.leading.trailing.equalTo(scrollView.frameLayoutGuide).inset(16)
             make.height.equalTo(250) // Calendar height
         }
 
-        // Other fields (dateLabel, tourNameField, etc.)
-        dateLabel.snp.makeConstraints { make in
+        startDateField.snp.makeConstraints { make in
             make.top.equalTo(calendarView.snp.bottom).offset(16)
+            make.leading.trailing.equalTo(scrollView.frameLayoutGuide).inset(16)
+            make.height.equalTo(40)
+        }
+        
+        endDateField.snp.makeConstraints { make in
+            make.top.equalTo(startDateField.snp.bottom).offset(16)
             make.leading.trailing.equalTo(scrollView.frameLayoutGuide).inset(16)
             make.height.equalTo(40)
         }
 
         tourNameField.snp.makeConstraints { make in
-            make.top.equalTo(dateLabel.snp.bottom).offset(16)
+            make.top.equalTo(endDateField.snp.bottom).offset(16)
             make.leading.trailing.equalTo(scrollView.frameLayoutGuide).inset(16)
             make.height.equalTo(40)
         }

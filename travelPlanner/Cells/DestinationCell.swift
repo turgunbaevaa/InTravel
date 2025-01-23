@@ -19,9 +19,9 @@ class DestinationCell: UICollectionViewCell {
         return image
     }()
     
-    let nameLabel = TravelPlannerSubTitleLabel(fontSize: 10, weight: .semibold)
-    let priceLabel = TravelPlannerSubTitleLabel(fontSize: 8, weight: .semibold)
-    let descriptionLabel = TravelPlannerSubTitleLabel(fontSize: 8, weight: .medium)
+    let nameLabel = TravelPlannerSubTitleLabel(fontSize: 12, weight: .semibold)
+    let priceLabel = TravelPlannerSubTitleLabel(fontSize: 10, weight: .semibold)
+    let descriptionLabel = TravelPlannerSubTitleLabel(fontSize: 10, weight: .medium)
     let locationIcon = UIImageView()
     let locationLabel = TravelPlannerSubTitleLabel(fontSize: 8, weight: .medium)
     
@@ -35,8 +35,11 @@ class DestinationCell: UICollectionViewCell {
     }
     
     func configure(with destination: Destination) {
-        // Load local image
-        imageView.image = UIImage(named: destination.image)
+        if !destination.image.isEmpty {
+            imageView.image = UIImage(named: destination.image)
+        } else {
+            imageView.image = UIImage(named: "image_placeholder")
+        }
         
         nameLabel.text = destination.name
         priceLabel.text = destination.price
@@ -76,7 +79,7 @@ class DestinationCell: UICollectionViewCell {
         priceLabel.textColor = UIColor.init(hex: "#362E83")
         
         descriptionLabel.snp.makeConstraints { make in
-            make.top.equalTo(nameLabel.snp.bottom).offset(4)
+            make.top.equalTo(priceLabel.snp.bottom).offset(4)
             make.leading.trailing.equalToSuperview().inset(6)
         }
         descriptionLabel.numberOfLines = 3
@@ -85,10 +88,11 @@ class DestinationCell: UICollectionViewCell {
         locationIcon.snp.makeConstraints { make in
             make.top.equalTo(descriptionLabel.snp.bottom).offset(8)
             make.leading.equalToSuperview().offset(8)
+            make.bottom.equalToSuperview().offset(-8)
             make.width.height.equalTo(16)
         }
         locationIcon.image = UIImage(systemName: "mappin.and.ellipse")
-        locationIcon.contentMode = .scaleAspectFit 
+        locationIcon.contentMode = .scaleAspectFit
         locationIcon.tintColor = UIColor.init(hex: "#362E83")
         
         locationLabel.snp.makeConstraints { make in

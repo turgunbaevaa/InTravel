@@ -12,19 +12,18 @@ import SDWebImage
 class HomeController: UIViewController {
     
     //MARK: - UI Components
-    
     private let homeView = HomeView()
     private var collectionView: UICollectionView!
     private var destinations: [Destination] = []
     private var sections: [Section] = []
-    private var filteredSections: [Section] = [] // Filtered sections based on the search
+    private var filteredSections: [Section] = []
     private var isSearching = false // Flag to track if search is active
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         setupCollectionView()
-        fetchDestinations() // Fetch data when view loads
+        fetchDestinations()
         
         AuthService.shared.fetchUser { [weak self] user, error in
             guard let self = self else { return }
@@ -62,7 +61,6 @@ class HomeController: UIViewController {
                 print("Fetched Places Count:", places.count)
                 print("Fetched Hotels Count:", hotels.count)
                 
-                // Create sections
                 self.sections = [
                     Section(title: "Places", destinations: places),
                     Section(title: "Hotels", destinations: hotels)
@@ -140,11 +138,9 @@ extension HomeController: UITextFieldDelegate {
         let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
 
         if updatedText.isEmpty {
-            // No search term: reset to original sections
             isSearching = false
             filteredSections = sections
         } else {
-            // Filter sections based on search term
             isSearching = true
             filteredSections = sections.map { section in
                 let filteredDestinations = section.destinations.filter { destination in
@@ -153,12 +149,9 @@ extension HomeController: UITextFieldDelegate {
                     destination.locationName.lowercased().contains(updatedText.lowercased())
                 }
                 return Section(title: section.title, destinations: filteredDestinations)
-            }.filter { !$0.destinations.isEmpty } // Remove sections with no destinations
+            }.filter { !$0.destinations.isEmpty }
         }
 
-        // Debugging: Check the filtered data
-        print("Search Text: \(updatedText)")
-        print("Filtered Sections Count: \(filteredSections.count)")
         filteredSections.forEach { section in
             print("Section: \(section.title), Destinations: \(section.destinations.map { $0.name })")
         }
@@ -181,14 +174,8 @@ extension HomeController: UICollectionViewDataSource, UICollectionViewDelegateFl
         return count
     }
     
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        let dataSource = isSearching ? filteredSections : sections
-//        let count = dataSource[section].destinations.count
-//        print("Number of Items in Section \(section):", count)
-//        return count
-//    }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1 // Only one cell per section, which contains the horizontal collection view
+        return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -205,7 +192,7 @@ extension HomeController: UICollectionViewDataSource, UICollectionViewDelegateFl
 
         let dataSource = isSearching ? filteredSections : sections
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderView.reuseId, for: indexPath) as! HeaderView
-        header.titleLabel.text = dataSource[indexPath.section].title // Correct title based on current data source
+        header.titleLabel.text = dataSource[indexPath.section].title
         return header
     }
 
@@ -214,6 +201,6 @@ extension HomeController: UICollectionViewDataSource, UICollectionViewDelegateFl
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 50) // Header size
+        return CGSize(width: collectionView.frame.width, height: 50) 
     }
 }

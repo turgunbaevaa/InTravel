@@ -75,7 +75,6 @@ class ForgotPswView: UIView {
         onNextTapped?()
     }
     
-    // Публичный метод для получения текста
     func getEmailText() -> String? {
         return emailField.text
     }
