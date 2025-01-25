@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseFirestore
+import FirebaseAuth
 
 protocol AddTourDelegate: AnyObject {
     func didAddTour(_ tour: Tour)
@@ -54,8 +55,13 @@ class AddTourController: UIViewController {
             return
         }
 
+        guard let userUID = Auth.auth().currentUser?.uid else {
+            showAlert(message: "User not authenticated. Please log in again.")
+            return
+        }
+
         let tourId = UUID().uuidString
-        let newTour = Tour(id: tourId, name: name, startDate: startDate, endDate: endDate, location: location, details: details)
+        let newTour = Tour(id: tourId, name: name, startDate: startDate, endDate: endDate, location: location, details: details, userUID: userUID)
 
         db.collection("tours").document(tourId).setData(newTour.toDictionary()) { [weak self] error in
             if let error = error {
@@ -68,6 +74,7 @@ class AddTourController: UIViewController {
             }
         }
     }
+    
     private func populateSelectedDate() {
         guard let selectedDate = selectedDate else { return }
         let formatter = DateFormatter()

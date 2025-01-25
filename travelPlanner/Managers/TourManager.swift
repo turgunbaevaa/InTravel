@@ -7,21 +7,28 @@
 
 import Foundation
 import FirebaseFirestore
+import FirebaseAuth
 
 class TourManager {
     
     static let shared = TourManager()
     
     func addTour(tour: Tour) {
+        guard let userUID = Auth.auth().currentUser?.uid else {
+            print("User not authenticated")
+            return
+        }
+        
         let db = Firestore.firestore()
         let tourData: [String: Any] = [
+            "userUID": userUID, 
             "name": tour.name,
             "startDate": Timestamp(date: tour.startDate),
             "endDate": Timestamp(date: tour.endDate),
             "location": tour.location,
             "details": tour.details
         ]
-
+        
         db.collection("tours").document(tour.id).setData(tourData) { error in
             if let error = error {
                 print("Error adding tour: \(error.localizedDescription)")
@@ -32,28 +39,46 @@ class TourManager {
     }
     
     func fetchTours(completion: @escaping ([Tour]) -> Void) {
+        guard let userUID = Auth.auth().currentUser?.uid else {
+            print("User not authenticated")
+            completion([])
+            return
+        }
+        
         let db = Firestore.firestore()
-        db.collection("tours").getDocuments { snapshot, error in
-            if let error = error {
-                print("Error fetching tours: \(error.localizedDescription)")
-                completion([])
-            } else {
+        db.collection("tours")
+            .whereField("userUID", isEqualTo: userUID) 
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    print("Error fetching tours: \(error.localizedDescription)")
+                    completion([])
+                    return
+                }
+
                 let tours = snapshot?.documents.compactMap { doc -> Tour? in
                     let data = doc.data()
                     guard let name = data["name"] as? String,
                           let startDate = (data["startDate"] as? Timestamp)?.dateValue(),
                           let endDate = (data["endDate"] as? Timestamp)?.dateValue(),
                           let location = data["location"] as? String,
-                          let details = data["details"] as? String else {
-                        return nil
-                    }
-                    return Tour(id: doc.documentID, name: name, startDate: startDate, endDate: endDate, location: location, details: details)
+                          let details = data["details"] as? String,
+                          let userUID = data["userUID"] as? String else { return nil }
+
+                    return Tour(
+                        id: doc.documentID,
+                        name: name,
+                        startDate: startDate,
+                        endDate: endDate,
+                        location: location,
+                        details: details,
+                        userUID: userUID
+                    )
                 } ?? []
+
                 completion(tours)
             }
-        }
     }
-
+    
     func updateTour(tour: Tour) {
         let db = Firestore.firestore()
         let tourData: [String: Any] = [
@@ -61,9 +86,10 @@ class TourManager {
             "startDate": Timestamp(date: tour.startDate),
             "endDate": Timestamp(date: tour.endDate),
             "location": tour.location,
-            "details": tour.details
+            "details": tour.details,
+            "userUID": tour.userUID
         ]
-
+        
         db.collection("tours").document(tour.id).updateData(tourData) { error in
             if let error = error {
                 if (error as NSError).domain == FirestoreErrorDomain,
@@ -77,7 +103,7 @@ class TourManager {
             }
         }
     }
-
+    
     func deleteTour(tourID: String) {
         let db = Firestore.firestore()
         db.collection("tours").document(tourID).delete { error in

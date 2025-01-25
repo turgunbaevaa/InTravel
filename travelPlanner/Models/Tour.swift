@@ -15,24 +15,27 @@ struct Tour {
     let endDate: Date
     let location: String
     let details: String
+    let userUID: String
     
     func toDictionary() -> [String: Any] {
         return [
             "id": id,
             "name": name,
-            "startDate": Timestamp(date: startDate), // Convert Date to Firestore Timestamp
-            "endDate": Timestamp(date: endDate),     // Convert Date to Firestore Timestamp
+            "startDate": Timestamp(date: startDate),
+            "endDate": Timestamp(date: endDate),     
             "location": location,
-            "details": details
+            "details": details,
+            "userUID": userUID
         ]
     }
     
-    init(id: String = UUID().uuidString, name: String, startDate: Date, endDate: Date, location: String, details: String) {
+    init(id: String = UUID().uuidString, name: String, startDate: Date, endDate: Date, location: String, details: String, userUID: String) {
             self.id = id
             self.name = name
             self.startDate = startDate
             self.endDate = endDate
             self.location = location
             self.details = details
+            self.userUID = userUID
         }
 }

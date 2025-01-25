@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 protocol EditTourDelegate: AnyObject {
     func tourDidUpdate(_ updatedTour: Tour)
@@ -44,13 +45,19 @@ class EditTourController: UIViewController {
         let startDate = formatter.date(from: editView.startDateField.text ?? "") ?? tour.startDate
         let endDate = formatter.date(from: editView.endDateField.text ?? "") ?? tour.endDate
 
+        guard let userUID = Auth.auth().currentUser?.uid else {
+            print("User not authenticated")
+            return
+        }
+
         let updatedTour = Tour(
             id: tour.id,
             name: editView.tourNameField.text ?? tour.name,
             startDate: startDate,
             endDate: endDate,
             location: editView.locationField.text ?? tour.location,
-            details: editView.remarksField.text ?? tour.details
+            details: editView.remarksField.text ?? tour.details,
+            userUID: userUID // Provide the correct userUID
         )
 
         TourManager.shared.updateTour(tour: updatedTour)

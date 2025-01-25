@@ -37,9 +37,8 @@ class TourDetailsController: UIViewController {
 
         guard let tourID = tour?.id else { return }
 
-        // Fetch the updated tour data
         let db = Firestore.firestore()
-        db.collection("tour").document(tourID).getDocument { snapshot, error in
+        db.collection("tours").document(tourID).getDocument { snapshot, error in
             if let error = error {
                 print("Error fetching updated tour: \(error.localizedDescription)")
             } else if let data = snapshot?.data() {
@@ -47,12 +46,23 @@ class TourDetailsController: UIViewController {
                       let startDate = (data["startDate"] as? Timestamp)?.dateValue(),
                       let endDate = (data["endDate"] as? Timestamp)?.dateValue(),
                       let location = data["location"] as? String,
-                      let details = data["details"] as? String else { return }
+                      let details = data["details"] as? String,
+                      let userUID = data["userUID"] as? String else { 
+                    return
+                }
 
-                let updatedTour = Tour(id: tourID, name: name, startDate: startDate, endDate: endDate, location: location, details: details)
+                let updatedTour = Tour(
+                    id: tourID,
+                    name: name,
+                    startDate: startDate,
+                    endDate: endDate,
+                    location: location,
+                    details: details,
+                    userUID: userUID
+                )
 
                 self.tour = updatedTour
-                self.detailsView.configure(with: updatedTour) // Refresh the UI
+                self.detailsView.configure(with: updatedTour)
             }
         }
     }

@@ -10,6 +10,7 @@ import FirebaseFirestore
 
 import UIKit
 import FirebaseFirestore
+import FirebaseAuth
 
 class MyTripsController: UIViewController {
     
@@ -66,37 +67,55 @@ class MyTripsController: UIViewController {
     // MARK: - Fetch Tours
     private func fetchTours() {
         print("Fetching tours...")
-        db.collection("tours").getDocuments { [weak self] snapshot, error in
-            guard let self = self, let documents = snapshot?.documents else {
-                print("Error fetching tours: \(error?.localizedDescription ?? "Unknown error")")
-                return
-            }
+        guard let userUID = Auth.auth().currentUser?.uid else {
+            print("User not authenticated")
+            return
+        }
 
-            self.tours = documents.compactMap { doc in
-                let data = doc.data()
-                guard let name = data["name"] as? String,
-                      let startDate = (data["startDate"] as? Timestamp)?.dateValue(),
-                      let endDate = (data["endDate"] as? Timestamp)?.dateValue(),
-                      let location = data["location"] as? String,
-                      let details = data["details"] as? String else {
-                    return nil
+        db.collection("tours")
+            .whereField("userUID", isEqualTo: userUID) 
+            .getDocuments { [weak self] snapshot, error in
+                guard let self = self else { return }
+
+                if let error = error {
+                    print("Error fetching tours: \(error.localizedDescription)")
+                    return
                 }
 
-                return Tour(
-                    id: doc.documentID,
-                    name: name,
-                    startDate: startDate,
-                    endDate: endDate,
-                    location: location,
-                    details: details
-                )
-            }
+                guard let documents = snapshot?.documents else {
+                    print("No documents found.")
+                    return
+                }
 
-            DispatchQueue.main.async {
-                self.myTripsView.toursCollectionView.reloadData()
-                self.myTripsView.calendarView.updateCalendar(for: self.selectedDate, tours: self.tours)
+                self.tours = documents.compactMap { doc -> Tour? in
+                    let data = doc.data()
+                    guard let name = data["name"] as? String,
+                          let startDateTimestamp = data["startDate"] as? Timestamp,
+                          let endDateTimestamp = data["endDate"] as? Timestamp,
+                          let location = data["location"] as? String,
+                          let details = data["details"] as? String else {
+                        return nil
+                    }
+
+                    let startDate = startDateTimestamp.dateValue()
+                    let endDate = endDateTimestamp.dateValue()
+
+                    return Tour(
+                        id: doc.documentID,
+                        name: name,
+                        startDate: startDate,
+                        endDate: endDate,
+                        location: location,
+                        details: details,
+                        userUID: userUID
+                    )
+                }
+
+                DispatchQueue.main.async {
+                    self.myTripsView.toursCollectionView.reloadData()
+                    self.myTripsView.calendarView.updateCalendar(for: self.selectedDate, tours: self.tours)
+                }
             }
-        }
     }
     
     // MARK: - Update Calendar
