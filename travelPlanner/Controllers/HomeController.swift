@@ -96,19 +96,38 @@ class HomeController: UIViewController {
     }
     
     @objc private func didTapLogout() {
-        AuthService.shared.signOut { [weak self] error in
+        let alertController = UIAlertController(
+            title: "Log Out",
+            message: "Are you sure you want to log out?",
+            preferredStyle: .alert
+        )
+        
+        // "Yes" Action - Proceed with Logout
+        let yesAction = UIAlertAction(title: "Yes", style: .destructive) { [weak self] _ in
             guard let self else { return }
             
-            if let error = error {
-                AlertManager.showLogOutErrorAlert(on: self, with: error)
-                return
-            }
-            
-            if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
-                sceneDelegate.checkAuthentication()
+            AuthService.shared.signOut { error in
+                if let error = error {
+                    AlertManager.showLogOutErrorAlert(on: self, with: error)
+                    return
+                }
+                
+                if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+                    sceneDelegate.checkAuthentication()
+                }
             }
         }
+        
+        // "Cancel" Action - Dismiss Alert
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        alertController.addAction(yesAction)
+        alertController.addAction(cancelAction)
+        
+        // Present the alert
+        present(alertController, animated: true, completion: nil)
     }
+    
     
     private func setupCollectionView() {
         let layout = UICollectionViewFlowLayout()
@@ -136,7 +155,7 @@ extension HomeController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? ""
         let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
-
+        
         if updatedText.isEmpty {
             isSearching = false
             filteredSections = sections
@@ -151,11 +170,11 @@ extension HomeController: UITextFieldDelegate {
                 return Section(title: section.title, destinations: filteredDestinations)
             }.filter { !$0.destinations.isEmpty }
         }
-
+        
         filteredSections.forEach { section in
             print("Section: \(section.title), Destinations: \(section.destinations.map { $0.name })")
         }
-
+        
         collectionView.reloadData()
         return true
     }
@@ -184,23 +203,23 @@ extension HomeController: UICollectionViewDataSource, UICollectionViewDelegateFl
         cell.destinations = dataSource[indexPath.section].destinations
         return cell
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard kind == UICollectionView.elementKindSectionHeader else {
             return UICollectionReusableView()
         }
-
+        
         let dataSource = isSearching ? filteredSections : sections
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderView.reuseId, for: indexPath) as! HeaderView
         header.titleLabel.text = dataSource[indexPath.section].title
         return header
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 280)
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 50) 
+        return CGSize(width: collectionView.frame.width, height: 50)
     }
 }
