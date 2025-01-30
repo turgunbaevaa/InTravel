@@ -56,17 +56,17 @@ class AuthService {
         }
     }
     
-    public func signIn(with userRequest: LogInUserRequest, completion: @escaping (Error?)-> Void) {
+    public func signIn(with userRequest: LogInUserRequest, completion: @escaping (String?) -> Void) {
         Auth.auth().signIn(withEmail: userRequest.email, password: userRequest.password) { result, error in
-            if let error = error {
-                completion(error)
+            if let error = error as NSError? {
+                let userFriendlyMessage = self.mapFirebaseError(error)
+                completion(userFriendlyMessage)
                 return
-            } else {
-                completion(nil)
             }
+            completion(nil)
         }
     }
-    
+
     public func signOut(completion: @escaping (Error?)-> Void) {
         do {
             try Auth.auth().signOut()
@@ -120,17 +120,6 @@ extension AuthService {
             return "Password is too weak. It must be at least 6 characters long."
         default:
             return "An unknown error occurred. Please try again."
-        }
-    }
-    
-    public func signIn(with userRequest: LogInUserRequest, completion: @escaping (String?) -> Void) {
-        Auth.auth().signIn(withEmail: userRequest.email, password: userRequest.password) { result, error in
-            if let error = error as NSError? {
-                let userFriendlyMessage = self.mapFirebaseError(error)
-                completion(userFriendlyMessage)
-                return
-            }
-            completion(nil)
         }
     }
 }
