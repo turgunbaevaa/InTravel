@@ -9,7 +9,7 @@ import FirebaseFirestore
 
 class NetworkManager {
     
-    static let shared = NetworkManager() 
+    static let shared = NetworkManager()
     
     private init() {}
     

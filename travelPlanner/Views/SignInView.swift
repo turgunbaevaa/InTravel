@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class AuthHeaderView: UIView {
+class SignInView: UIView {
     
     var onSignInTapped: (() -> Void)?
     
@@ -84,6 +84,7 @@ class AuthHeaderView: UIView {
         }
         emailField.keyboardType = .emailAddress
         emailField.textContentType = .emailAddress 
+        emailField.addTarget(self, action: #selector(emailFieldEditingChanged(_:)), for: .editingChanged)
         
         pswField.snp.makeConstraints { make in
             make.top.equalTo(emailField.snp.bottom).offset(18)
@@ -116,6 +117,10 @@ class AuthHeaderView: UIView {
     }
     
     // MARK: - Selectors
+    @objc private func emailFieldEditingChanged(_ textField: UITextField) {
+        textField.text = textField.text?.lowercased()
+    }
+    
     @objc private func didTapForgotPsw() {
         onForgotPswTapped?()
     }

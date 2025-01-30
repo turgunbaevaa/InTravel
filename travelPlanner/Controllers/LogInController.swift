@@ -10,7 +10,7 @@ import SnapKit
 
 class LogInController: UIViewController {
     
-    private let signInView = AuthHeaderView()
+    private let signInView = SignInView()
     
     override func viewDidLoad() {
         super.viewDidLoad()

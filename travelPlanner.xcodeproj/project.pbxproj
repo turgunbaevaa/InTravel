@@ -52,7 +52,7 @@
 		0AF05A952D25DB13001CE2B7 /* LogInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF05A942D25DB13001CE2B7 /* LogInController.swift */; };
 		0AF05A972D25DB21001CE2B7 /* RegisterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF05A962D25DB21001CE2B7 /* RegisterController.swift */; };
 		0AF05A992D25DB3F001CE2B7 /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF05A982D25DB3F001CE2B7 /* HomeController.swift */; };
-		0AF05A9C2D25DC64001CE2B7 /* AuthHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF05A9B2D25DC64001CE2B7 /* AuthHeaderView.swift */; };
+		0AF05A9C2D25DC64001CE2B7 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF05A9B2D25DC64001CE2B7 /* SignInView.swift */; };
 		0AF05AA02D25DF75001CE2B7 /* TravelPlannerTitleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF05A9F2D25DF75001CE2B7 /* TravelPlannerTitleLabel.swift */; };
 		0AF05AA52D25DFF3001CE2B7 /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF05AA42D25DFF3001CE2B7 /* UIView+Ext.swift */; };
 		0AF05AA72D25E029001CE2B7 /* Extension+UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF05AA62D25E029001CE2B7 /* Extension+UIColor.swift */; };
@@ -112,7 +112,7 @@
 		0AF05A942D25DB13001CE2B7 /* LogInController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInController.swift; sourceTree = "<group>"; };
 		0AF05A962D25DB21001CE2B7 /* RegisterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterController.swift; sourceTree = "<group>"; };
 		0AF05A982D25DB3F001CE2B7 /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
-		0AF05A9B2D25DC64001CE2B7 /* AuthHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthHeaderView.swift; sourceTree = "<group>"; };
+		0AF05A9B2D25DC64001CE2B7 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		0AF05A9F2D25DF75001CE2B7 /* TravelPlannerTitleLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelPlannerTitleLabel.swift; sourceTree = "<group>"; };
 		0AF05AA42D25DFF3001CE2B7 /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
 		0AF05AA62D25E029001CE2B7 /* Extension+UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+UIColor.swift"; sourceTree = "<group>"; };
@@ -222,7 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				0AF05A9E2D25DF2D001CE2B7 /* CustomViews */,
-				0AF05A9B2D25DC64001CE2B7 /* AuthHeaderView.swift */,
+				0AF05A9B2D25DC64001CE2B7 /* SignInView.swift */,
 				0A818D752D2610400024ACD9 /* SignUpView.swift */,
 				0A818D792D263BDA0024ACD9 /* ForgotPswView.swift */,
 				0A818D8D2D3662800024ACD9 /* HomeView.swift */,
@@ -494,7 +494,7 @@
 				0AF05AAC2D25E4B2001CE2B7 /* TravelPlannerTextField.swift in Sources */,
 				0A818DBA2D40F0B80024ACD9 /* TourDetailsView.swift in Sources */,
 				0A818DA82D3B120F0024ACD9 /* AddTourView.swift in Sources */,
-				0AF05A9C2D25DC64001CE2B7 /* AuthHeaderView.swift in Sources */,
+				0AF05A9C2D25DC64001CE2B7 /* SignInView.swift in Sources */,
 				0A818DB02D3BD9B90024ACD9 /* YearCell.swift in Sources */,
 				0AF05AB22D25EF0C001CE2B7 /* AuthService.swift in Sources */,
 			);
