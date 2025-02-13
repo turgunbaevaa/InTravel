@@ -86,10 +86,23 @@ class TourCell: UICollectionViewCell {
 
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM.yyyy"
-        let startDate = formatter.string(from: tour.startDate)
-        let endDate = formatter.string(from: tour.endDate)
-        dateLabel.text = "\(startDate) - \(endDate)"
 
+        let startDate: String
+        let endDate: String
+
+        if !tour.startDate.timeIntervalSince1970.isNaN {
+            startDate = formatter.string(from: tour.startDate)
+        } else {
+            startDate = "Unknown Start Date"
+        }
+
+        if !tour.endDate.timeIntervalSince1970.isNaN {
+            endDate = formatter.string(from: tour.endDate)
+        } else {
+            endDate = "Unknown End Date"
+        }
+
+        dateLabel.text = "\(startDate) - \(endDate)"
         locationLabel.text = tour.location
 
         tourImageView.image = UIImage(named: "placeholder_image")

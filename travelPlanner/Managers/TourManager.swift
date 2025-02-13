@@ -21,7 +21,7 @@ class TourManager {
         
         let db = Firestore.firestore()
         let tourData: [String: Any] = [
-            "userUID": userUID, 
+            "userUID": userUID,
             "name": tour.name,
             "startDate": Timestamp(date: tour.startDate),
             "endDate": Timestamp(date: tour.endDate),
@@ -29,7 +29,7 @@ class TourManager {
             "details": tour.details
         ]
         
-        db.collection("tours").document(tour.id).setData(tourData) { error in
+        db.collection("tours").document(tour.id).setData(tourData, merge: true) { error in
             if let error = error {
                 print("Error adding tour: \(error.localizedDescription)")
             } else {
@@ -44,25 +44,50 @@ class TourManager {
             completion([])
             return
         }
-        
+
         let db = Firestore.firestore()
         db.collection("tours")
-            .whereField("userUID", isEqualTo: userUID) 
+            .whereField("userUID", isEqualTo: userUID)
             .getDocuments { snapshot, error in
                 if let error = error {
-                    print("Error fetching tours: \(error.localizedDescription)")
+                    print("Firestore Error fetching tours:", error.localizedDescription)
                     completion([])
                     return
                 }
 
-                let tours = snapshot?.documents.compactMap { doc -> Tour? in
+                guard let documents = snapshot?.documents else {
+                    print("No tours found in Firestore")
+                    completion([])
+                    return
+                }
+
+                let tours = documents.compactMap { doc -> Tour? in
                     let data = doc.data()
+                    print("Fetched Tour Data:", data)
+
+                    //Ensure `startDate` and `endDate` exist
+                    guard let startDateTimestamp = data["startDate"] as? Timestamp,
+                          let endDateTimestamp = data["endDate"] as? Timestamp else {
+                        print("Missing `startDate` or `endDate` in document:", doc.documentID)
+                        return nil
+                    }
+
+                    let startDate = startDateTimestamp.dateValue()
+                    let endDate = endDateTimestamp.dateValue()
+
+                    //Prevent NaN issues
+                    if startDate.timeIntervalSince1970.isNaN || endDate.timeIntervalSince1970.isNaN {
+                        print("Invalid date detected in document:", doc.documentID)
+                        return nil
+                    }
+
+                    //Ensure all required fields exist
                     guard let name = data["name"] as? String,
-                          let startDate = (data["startDate"] as? Timestamp)?.dateValue(),
-                          let endDate = (data["endDate"] as? Timestamp)?.dateValue(),
                           let location = data["location"] as? String,
-                          let details = data["details"] as? String,
-                          let userUID = data["userUID"] as? String else { return nil }
+                          let details = data["details"] as? String else {
+                        print("Invalid document format in Firestore:", doc.documentID)
+                        return nil
+                    }
 
                     return Tour(
                         id: doc.documentID,
@@ -73,9 +98,11 @@ class TourManager {
                         details: details,
                         userUID: userUID
                     )
-                } ?? []
+                }
 
-                completion(tours)
+                DispatchQueue.main.async {
+                    completion(tours)
+                }
             }
     }
     
@@ -105,12 +132,42 @@ class TourManager {
     }
     
     func deleteTour(tourID: String) {
+        guard let userUID = Auth.auth().currentUser?.uid else {
+            print("Firestore Delete Error: User UID is nil!")
+            return
+        }
+        
+        print("User UID: \(userUID) - Attempting to delete tour with ID: \(tourID)")
+        
         let db = Firestore.firestore()
-        db.collection("tours").document(tourID).delete { error in
+        let docRef = db.collection("tours").document(tourID)
+        
+        docRef.getDocument { (document, error) in
             if let error = error {
-                print("Error deleting tour: \(error.localizedDescription)")
+                print("Firestore Error fetching document before delete:", error.localizedDescription)
+                return
+            }
+            
+            guard let document = document, document.exists else {
+                print("Tour document not found! Cannot delete.")
+                return
+            }
+            
+            let data = document.data()
+            print("Tour Data Before Delete:", data ?? "No data found")
+            
+            let ownerUID = data?["userUID"] as? String ?? ""
+            
+            if ownerUID == userUID {
+                docRef.delete { error in
+                    if let error = error {
+                        print("Firestore Delete Error:", error.localizedDescription)
+                    } else {
+                        print("Tour deleted successfully!")
+                    }
+                }
             } else {
-                print("Tour deleted successfully!")
+                print("Permission denied: You can only delete your own tours!")
             }
         }
     }

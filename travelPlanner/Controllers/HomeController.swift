@@ -53,11 +53,9 @@ class HomeController: UIViewController {
             }
             
             if let destinations = destinations {
-                // Filter destinations by type
                 let places = destinations.filter { $0.type == "Place" }
                 let hotels = destinations.filter { $0.type == "Hotel" }
                 
-                // Debugging: Check the counts of filtered results
                 print("Fetched Places Count:", places.count)
                 print("Fetched Hotels Count:", hotels.count)
                 
@@ -66,10 +64,8 @@ class HomeController: UIViewController {
                     Section(title: "Hotels", destinations: hotels)
                 ]
                 
-                // Debugging: Check section data
-                print("Sections Created: \(self.sections.map { $0.title })")
-                
                 DispatchQueue.main.async {
+                    print("Sections before reload: \(self.sections.count)") // Debug log
                     self.collectionView.reloadData()
                 }
             }

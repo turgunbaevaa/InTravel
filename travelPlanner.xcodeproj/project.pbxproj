@@ -43,6 +43,9 @@
 		0A818DBC2D40F0D10024ACD9 /* TourDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818DBB2D40F0D10024ACD9 /* TourDetailsController.swift */; };
 		0A818DBE2D40F0F20024ACD9 /* EditTourController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818DBD2D40F0F20024ACD9 /* EditTourController.swift */; };
 		0A818DC02D40F1040024ACD9 /* EditTourView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818DBF2D40F1040024ACD9 /* EditTourView.swift */; };
+		0A818DC72D5B82CC0024ACD9 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818DC62D5B82CC0024ACD9 /* APIManager.swift */; };
+		0A818DC92D5B83500024ACD9 /* OTPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818DC82D5B83500024ACD9 /* OTPView.swift */; };
+		0A818DCB2D5B84A00024ACD9 /* OTPController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A818DCA2D5B84A00024ACD9 /* OTPController.swift */; };
 		0AF05A7C2D25AECA001CE2B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF05A7B2D25AECA001CE2B7 /* AppDelegate.swift */; };
 		0AF05A7E2D25AECA001CE2B7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF05A7D2D25AECA001CE2B7 /* SceneDelegate.swift */; };
 		0AF05A852D25AECC001CE2B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AF05A842D25AECC001CE2B7 /* Assets.xcassets */; };
@@ -101,6 +104,9 @@
 		0A818DBB2D40F0D10024ACD9 /* TourDetailsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourDetailsController.swift; sourceTree = "<group>"; };
 		0A818DBD2D40F0F20024ACD9 /* EditTourController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTourController.swift; sourceTree = "<group>"; };
 		0A818DBF2D40F1040024ACD9 /* EditTourView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTourView.swift; sourceTree = "<group>"; };
+		0A818DC62D5B82CC0024ACD9 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		0A818DC82D5B83500024ACD9 /* OTPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPView.swift; sourceTree = "<group>"; };
+		0A818DCA2D5B84A00024ACD9 /* OTPController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPController.swift; sourceTree = "<group>"; };
 		0AF05A782D25AECA001CE2B7 /* travelPlanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = travelPlanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AF05A7B2D25AECA001CE2B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0AF05A7D2D25AECA001CE2B7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -141,8 +147,8 @@
 		0A818D8F2D3665C40024ACD9 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				0A818D902D3665E90024ACD9 /* DestinationCell.swift */,
 				0A818D9A2D3859A00024ACD9 /* HorizontalSectionCell.swift */,
+				0A818D902D3665E90024ACD9 /* DestinationCell.swift */,
 				0A818DA12D393ACE0024ACD9 /* CalendarCell.swift */,
 				0A818DA32D393B460024ACD9 /* TourCell.swift */,
 				0A818DAF2D3BD9B90024ACD9 /* YearCell.swift */,
@@ -161,6 +167,7 @@
 				0A818D922D3805C20024ACD9 /* NetworkManager.swift */,
 				0A818D9E2D393A680024ACD9 /* CalendarManager.swift */,
 				0A818DB72D3F835E0024ACD9 /* TourManager.swift */,
+				0A818DC62D5B82CC0024ACD9 /* APIManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -232,6 +239,7 @@
 				0A818DB52D3E4E060024ACD9 /* CalendarView.swift */,
 				0A818DB92D40F0B80024ACD9 /* TourDetailsView.swift */,
 				0A818DBF2D40F1040024ACD9 /* EditTourView.swift */,
+				0A818DC82D5B83500024ACD9 /* OTPView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -251,6 +259,7 @@
 				0A818DA92D3B12500024ACD9 /* AddTourController.swift */,
 				0A818DBB2D40F0D10024ACD9 /* TourDetailsController.swift */,
 				0A818DBD2D40F0F20024ACD9 /* EditTourController.swift */,
+				0A818DCA2D5B84A00024ACD9 /* OTPController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -482,13 +491,16 @@
 				0A818D7C2D27595D0024ACD9 /* AlertManager.swift in Sources */,
 				0A818DA62D3B10B40024ACD9 /* MyTripsView.swift in Sources */,
 				0A818D9F2D393A680024ACD9 /* CalendarManager.swift in Sources */,
+				0A818DC72D5B82CC0024ACD9 /* APIManager.swift in Sources */,
 				0AF05AAA2D25E1A5001CE2B7 /* TravelPlannerSubTitleLabel.swift in Sources */,
 				0AF05AB02D25E806001CE2B7 /* TravelPlannerButton.swift in Sources */,
 				0A818D8C2D36611A0024ACD9 /* Destination.swift in Sources */,
 				0A818DAE2D3B198F0024ACD9 /* CustomTextView.swift in Sources */,
 				0AF05A7C2D25AECA001CE2B7 /* AppDelegate.swift in Sources */,
+				0A818DC92D5B83500024ACD9 /* OTPView.swift in Sources */,
 				0AF05A7E2D25AECA001CE2B7 /* SceneDelegate.swift in Sources */,
 				0A818D782D2619670024ACD9 /* WebViewerController.swift in Sources */,
+				0A818DCB2D5B84A00024ACD9 /* OTPController.swift in Sources */,
 				0A818DA22D393ACE0024ACD9 /* CalendarCell.swift in Sources */,
 				0A818D762D2610400024ACD9 /* SignUpView.swift in Sources */,
 				0AF05AAC2D25E4B2001CE2B7 /* TravelPlannerTextField.swift in Sources */,
