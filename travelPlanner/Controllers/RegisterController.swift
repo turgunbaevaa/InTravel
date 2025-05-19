@@ -91,14 +91,11 @@ class RegisterController: UIViewController {
             }
             
             if wasRegistered {
-                self.requestOTP()
-            } else {
-                print("Skipping OTP, redirecting to Home")
-                DispatchQueue.main.async {
-                    if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
-                        sceneDelegate.checkAuthentication()
-                    }
+                if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+                    sceneDelegate.checkAuthentication()
                 }
+            } else {
+                AlertManager.showRegistrationErrorAlert(on: self)
             }
         }
     }
@@ -113,22 +110,5 @@ class RegisterController: UIViewController {
         let vc = WebViewerController(with: urlString)
         let nav = UINavigationController(rootViewController: vc)
         self.present(nav, animated: true, completion: nil)
-    }
-    
-    @objc func requestOTP() {
-        guard let email = signUpView.getEmail() else { return }
-        
-        APIManager.sendOTP(email: email) { success in
-            DispatchQueue.main.async {
-                if success {
-                    let otpVC = OTPController(email: email)
-                    self.navigationController?.pushViewController(otpVC, animated: true)
-                } else {
-                    let alert = UIAlertController(title: "Failed to Send OTP", message: "Please try again.", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .default))
-                    self.present(alert, animated: true)
-                }
-            }
-        }
     }
 }

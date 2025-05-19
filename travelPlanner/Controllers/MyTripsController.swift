@@ -67,13 +67,10 @@ class MyTripsController: UIViewController {
     // MARK: - Fetch Tours
     private func fetchTours() {
         print("Fetching tours...")
-
         guard let userUID = Auth.auth().currentUser?.uid else {
-            print("User not authenticated, cannot fetch tours.")
+            print("User not authenticated")
             return
         }
-
-        print("Fetching tours for user UID: \(userUID)")
 
         db.collection("tours")
             .whereField("userUID", isEqualTo: userUID)
@@ -81,40 +78,27 @@ class MyTripsController: UIViewController {
                 guard let self = self else { return }
 
                 if let error = error {
-                    print("Firestore Error fetching tours:", error.localizedDescription)
+                    print("Error fetching tours: \(error.localizedDescription)")
                     return
                 }
 
                 guard let documents = snapshot?.documents else {
-                    print("No tours found in Firestore.")
+                    print("No documents found.")
                     return
                 }
 
-                print("Found \(documents.count) tours in Firestore")
                 self.tours = documents.compactMap { doc -> Tour? in
                     let data = doc.data()
-                    print("Tour Data: \(data)")
-
-                    guard let startDateTimestamp = data["startDate"] as? Timestamp,
-                          let endDateTimestamp = data["endDate"] as? Timestamp else {
-                        print("Missing `startDate` or `endDate` in document:", doc.documentID)
+                    guard let name = data["name"] as? String,
+                          let startDateTimestamp = data["startDate"] as? Timestamp,
+                          let endDateTimestamp = data["endDate"] as? Timestamp,
+                          let location = data["location"] as? String,
+                          let details = data["details"] as? String else {
                         return nil
                     }
 
                     let startDate = startDateTimestamp.dateValue()
                     let endDate = endDateTimestamp.dateValue()
-
-                    if startDate.timeIntervalSince1970.isNaN || endDate.timeIntervalSince1970.isNaN {
-                        print("Invalid date detected in document:", doc.documentID)
-                        return nil
-                    }
-
-                    guard let name = data["name"] as? String,
-                          let location = data["location"] as? String,
-                          let details = data["details"] as? String else {
-                        print("Invalid document format in Firestore:", doc.documentID)
-                        return nil
-                    }
 
                     return Tour(
                         id: doc.documentID,
@@ -152,16 +136,9 @@ class MyTripsController: UIViewController {
     }
     
     @objc private func addTourButtonTapped() {
-        guard let userUID = Auth.auth().currentUser?.uid else {
-            print("User not authenticated, cannot add tour")
-            return
-        }
-        
         let addTourController = AddTourController()
         addTourController.selectedDate = selectedDay
         addTourController.delegate = self
-        addTourController.userUID = userUID // Pass the userUID
-        
         navigationController?.pushViewController(addTourController, animated: true)
     }
 }
@@ -231,7 +208,7 @@ extension MyTripsController: UICollectionViewDataSource, UICollectionViewDelegat
 extension MyTripsController: AddTourDelegate {
     func didAddTour(_ tour: Tour) {
         tours.append(tour)
-        
+
         myTripsView.toursCollectionView.reloadData()
         myTripsView.calendarView.updateCalendar(for: selectedDate, tours: tours)
     }
@@ -242,14 +219,14 @@ extension MyTripsController: EditTourDelegate {
         if let index = tours.firstIndex(where: { $0.id == updatedTour.id }) {
             tours[index] = updatedTour
         }
-        
+
         myTripsView.toursCollectionView.reloadData()
         myTripsView.calendarView.updateCalendar(for: selectedDate, tours: tours)
     }
-    
+
     func tourDidDelete(_ deletedTourID: String) {
         tours.removeAll { $0.id == deletedTourID }
-        
+
         myTripsView.toursCollectionView.reloadData()
         myTripsView.calendarView.updateCalendar(for: selectedDate, tours: tours)
     }

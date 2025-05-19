@@ -14,9 +14,7 @@ protocol AddTourDelegate: AnyObject {
 }
 
 class AddTourController: UIViewController {
-    
     weak var delegate: AddTourDelegate?
-    var userUID: String?
     
     private let addTourView = AddTourView()
     private let db = Firestore.firestore()
@@ -58,33 +56,21 @@ class AddTourController: UIViewController {
         }
 
         guard let userUID = Auth.auth().currentUser?.uid else {
-            print("User not authenticated, Firestore write blocked.")
-            showAlert(message: "Authentication error. Please log in again.")
+            showAlert(message: "User not authenticated. Please log in again.")
             return
         }
 
         let tourId = UUID().uuidString
-        let tourData: [String: Any] = [
-            "id": tourId,
-            "name": name,
-            "startDate": Timestamp(date: startDate),
-            "endDate": Timestamp(date: endDate),
-            "location": location,
-            "details": details,
-            "userUID": userUID
-        ]
+        let newTour = Tour(id: tourId, name: name, startDate: startDate, endDate: endDate, location: location, details: details, userUID: userUID)
 
-        print("Writing to Firestore with Data:", tourData)
-
-        db.collection("tours").document(tourId).setData(tourData, merge: true) { [weak self] error in
+        db.collection("tours").document(tourId).setData(newTour.toDictionary()) { [weak self] error in
             if let error = error {
-                print("Firestore Write Error:", error.localizedDescription)
                 self?.showAlert(message: "Error saving tour: \(error.localizedDescription)")
             } else {
-                print("Tour saved successfully!")
-                let newTour = Tour(id: tourId, name: name, startDate: startDate, endDate: endDate, location: location, details: details, userUID: userUID)
-                self?.delegate?.didAddTour(newTour)
-                self?.navigationController?.popViewController(animated: true)
+                self?.showAlert(message: "Tour saved successfully!", completion: {
+                    self?.delegate?.didAddTour(newTour)
+                    self?.navigationController?.popViewController(animated: true)
+                })
             }
         }
     }
@@ -99,12 +85,7 @@ class AddTourController: UIViewController {
     private func parseDate(from dateString: String) -> Date? {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM.yyyy"
-        
-        let date = formatter.date(from: dateString)
-        if date == nil {
-            print("Invalid date format: \(dateString)")
-        }
-        return date
+        return formatter.date(from: dateString)
     }
     
     private func showAlert(message: String, completion: (() -> Void)? = nil) {

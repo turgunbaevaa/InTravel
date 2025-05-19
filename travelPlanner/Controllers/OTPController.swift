@@ -35,7 +35,7 @@ class OTPController: UIViewController {
     
     private func setupUI() {
         otpView.otpCompletion = { [weak self] otp in
-            self?.confirmOTP(otp)
+           // self?.confirmOTP(otp)
         }
         view.addSubviews(infoLabel, otpView, confirmButton)
         
@@ -64,10 +64,10 @@ class OTPController: UIViewController {
     }
     
     @objc private func confirmTapped() {
-        let otpCode = otpView.textFields.compactMap { $0.text }.joined()
-        confirmOTP(otpCode)
+       // let otpCode = otpView.textFields.compactMap { $0.text }.joined()
+       // confirmOTP(otpCode)
     }
-    
+    /*
     private func confirmOTP(_ otp: String) {
         APIManager.verifyOTP(email: email, otp: otp) { [weak self] success in
             DispatchQueue.main.async {
@@ -91,6 +91,7 @@ class OTPController: UIViewController {
             }
         }
     }
+     */
     
     private func goToHomeScreen() {
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,

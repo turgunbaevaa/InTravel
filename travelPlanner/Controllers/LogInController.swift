@@ -52,11 +52,13 @@ class LogInController: UIViewController {
             password: signInView.getRegisteredPassword() ?? ""
         )
         
+        // Validate email
         if !Validator.isValidEmail(for: loginUserRequest.email) {
             AlertManager.showInvalidEmailAlert(on: self)
             return
         }
         
+        // Validate password
         if !Validator.isPasswordValid(for: loginUserRequest.password) {
             AlertManager.showInvalidPswAlert(on: self)
             return
@@ -70,7 +72,9 @@ class LogInController: UIViewController {
                 return
             }
             
-            self.requestOTP()
+            if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+                sceneDelegate.checkAuthentication()
+            }
         }
     }
     
@@ -84,22 +88,5 @@ class LogInController: UIViewController {
         print("Sign Up button tapped")
         let vc = RegisterController()
         navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    @objc func requestOTP() {
-        guard let email = signInView.getRegisteredEmail() else { return }
-        
-        APIManager.sendOTP(email: email) { success in
-            DispatchQueue.main.async {
-                if success {
-                    let otpVC = OTPController(email: email)
-                    self.navigationController?.pushViewController(otpVC, animated: true)
-                } else {
-                    let alert = UIAlertController(title: "Failed to Send OTP", message: "Please try again.", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .default))
-                    self.present(alert, animated: true)
-                }
-            }
-        }
     }
 }
